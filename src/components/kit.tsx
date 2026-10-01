@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { getDB, getSession, type DB } from "@/lib/db";
 
 export const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm";
@@ -10,6 +10,12 @@ export const btnDanger = "inline-flex items-center gap-1 rounded-lg border borde
 export function useDB(): [DB, () => void, string] {
   const [, setV] = useState(0);
   const db = useMemo(() => getDB(), []);
+  // Re-render when a LAN sync pull brings newer data from the main device
+  useEffect(() => {
+    const h = () => setV((v) => v + 1);
+    window.addEventListener("cwp-sync", h);
+    return () => window.removeEventListener("cwp-sync", h);
+  }, []);
   return [db, () => setV((v) => v + 1), getSession()?.username ?? "?"];
 }
 
