@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 - Vendor license keys: tools/keygen.mjs <MACHINE_ID> (salt must match src/lib/db.ts) — keeps activation fully offline.
 - Desktop build: vite.desktop.config.ts (SPA shell) + electron/main.cjs serving dist/client over app:// for a stable origin; packaged with @electron/packager, installer via installer/CarWashPro.iss.
+- Windows installer is built by GitHub Actions (.github/workflows/build-windows.yml) on a Windows runner — the sandbox cannot run Inno Setup.
