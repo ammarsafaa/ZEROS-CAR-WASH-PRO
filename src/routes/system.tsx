@@ -1,11 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ShieldCheck, DatabaseBackup } from "lucide-react";
+import { ShieldCheck, DatabaseBackup, Network } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { requireAuth } from "./index";
 import { UpdatePanel } from "@/components/UpdatePanel";
 import { saveDB, logAudit, listBackups, makeAutoBackup, restoreAutoBackup, machineId, getLicense, activateLicense, trialDaysLeft, getSession } from "@/lib/db";
+import { getSyncConfig, setSyncConfig, syncStatus, testConnection, pushNow, type SyncMode } from "@/lib/sync";
 import { useDB, Field, Table, inputCls, btnPrimary, btnGhost, td } from "@/components/kit";
+
+interface NativeLan { lanStart(): Promise<{ ok: boolean; ips?: string[]; port?: number; error?: string }>; lanStop(): Promise<{ ok: boolean }>; lanStatus(): Promise<{ running: boolean; ips: string[]; port: number }>; }
+const native = (): (NativeLan & Record<string, unknown>) | null => (window as unknown as { cwpNative?: NativeLan }).cwpNative ?? null;
 
 export const Route = createFileRoute("/system")({
   beforeLoad: () => requireAuth(),
