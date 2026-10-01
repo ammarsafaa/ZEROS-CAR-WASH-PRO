@@ -10,14 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as QueueRouteImport } from './routes/queue'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckinRoute = CheckinRouteImport.update({
+  id: '/checkin',
+  path: '/checkin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CustomersRoute = CustomersRouteImport.update({
@@ -28,6 +35,11 @@ const CustomersRoute = CustomersRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QueueRoute = QueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -43,38 +55,68 @@ const VehiclesRoute = VehiclesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
   '/login': typeof LoginRoute
+  '/queue': typeof QueueRoute
   '/services': typeof ServicesRoute
   '/vehicles': typeof VehiclesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
   '/login': typeof LoginRoute
+  '/queue': typeof QueueRoute
   '/services': typeof ServicesRoute
   '/vehicles': typeof VehiclesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
   '/login': typeof LoginRoute
+  '/queue': typeof QueueRoute
   '/services': typeof ServicesRoute
   '/vehicles': typeof VehiclesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/customers' | '/login' | '/services' | '/vehicles'
+  fullPaths:
+    | '/'
+    | '/checkin'
+    | '/customers'
+    | '/login'
+    | '/queue'
+    | '/services'
+    | '/vehicles'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/customers' | '/login' | '/services' | '/vehicles'
-  id: '__root__' | '/' | '/customers' | '/login' | '/services' | '/vehicles'
+  to:
+    | '/'
+    | '/checkin'
+    | '/customers'
+    | '/login'
+    | '/queue'
+    | '/services'
+    | '/vehicles'
+  id:
+    | '__root__'
+    | '/'
+    | '/checkin'
+    | '/customers'
+    | '/login'
+    | '/queue'
+    | '/services'
+    | '/vehicles'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CheckinRoute: typeof CheckinRoute
   CustomersRoute: typeof CustomersRoute
   LoginRoute: typeof LoginRoute
+  QueueRoute: typeof QueueRoute
   ServicesRoute: typeof ServicesRoute
   VehiclesRoute: typeof VehiclesRoute
 }
@@ -86,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkin': {
+      id: '/checkin'
+      path: '/checkin'
+      fullPath: '/checkin'
+      preLoaderRoute: typeof CheckinRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/customers': {
@@ -100,6 +149,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/queue': {
+      id: '/queue'
+      path: '/queue'
+      fullPath: '/queue'
+      preLoaderRoute: typeof QueueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -121,8 +177,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CheckinRoute: CheckinRoute,
   CustomersRoute: CustomersRoute,
   LoginRoute: LoginRoute,
+  QueueRoute: QueueRoute,
   ServicesRoute: ServicesRoute,
   VehiclesRoute: VehiclesRoute,
 }
