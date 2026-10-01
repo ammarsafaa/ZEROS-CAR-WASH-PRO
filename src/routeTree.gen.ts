@@ -30,6 +30,7 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ShiftsRouteImport } from './routes/shifts'
 import { Route as SystemRouteImport } from './routes/system'
+import { Route as UsersRouteImport } from './routes/users'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
 import { Route as WorkersRouteImport } from './routes/workers'
 
@@ -138,6 +139,11 @@ const SystemRoute = SystemRouteImport.update({
   path: '/system',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UsersRoute = UsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VehiclesRoute = VehiclesRouteImport.update({
   id: '/vehicles',
   path: '/vehicles',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
   '/system': typeof SystemRoute
+  '/users': typeof UsersRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
   '/system': typeof SystemRoute
+  '/users': typeof UsersRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
   '/system': typeof SystemRoute
+  '/users': typeof UsersRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shifts'
     | '/system'
+    | '/users'
     | '/vehicles'
     | '/workers'
   fileRoutesByTo: FileRoutesByTo
@@ -274,6 +284,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shifts'
     | '/system'
+    | '/users'
     | '/vehicles'
     | '/workers'
   id:
@@ -299,6 +310,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/shifts'
     | '/system'
+    | '/users'
     | '/vehicles'
     | '/workers'
   fileRoutesById: FileRoutesById
@@ -325,6 +337,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   ShiftsRoute: typeof ShiftsRoute
   SystemRoute: typeof SystemRoute
+  UsersRoute: typeof UsersRoute
   VehiclesRoute: typeof VehiclesRoute
   WorkersRoute: typeof WorkersRoute
 }
@@ -478,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SystemRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vehicles': {
       id: '/vehicles'
       path: '/vehicles'
@@ -517,6 +537,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   ShiftsRoute: ShiftsRoute,
   SystemRoute: SystemRoute,
+  UsersRoute: UsersRoute,
   VehiclesRoute: VehiclesRoute,
   WorkersRoute: WorkersRoute,
 }
