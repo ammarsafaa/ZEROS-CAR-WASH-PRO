@@ -1,4 +1,4 @@
-name: Build Windows Installer (CAR WASH PRO)
+name: Build Windows Installer (ZEROS CAR WASH PRO)
 
 on:
   push:
@@ -62,12 +62,12 @@ jobs:
             pkg/release/*.exe \
             pkg/release/*.blockmap \
             pkg/release/latest.yml \
-            --title "CAR WASH PRO v${VERSION}" \
+            --title "ZEROS CAR WASH PRO v${VERSION}" \
             --generate-notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: CAR-WASH-PRO-Setup
+          name: ZEROS-CAR-WASH-PRO-Setup
           path: pkg/release/*.exe

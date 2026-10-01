@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CAR WASH PRO — نظام إدارة مغسلة السيارات" },
+      { title: "ZEROS CAR WASH PRO — نظام إدارة مغسلة السيارات" },
       { name: "description", content: "نظام إدارة مغسلة سيارات يعمل بدون إنترنت" },
     ],
     links: [
