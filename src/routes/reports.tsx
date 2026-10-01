@@ -63,7 +63,7 @@ function ReportsPage() {
         <div>
           <h3 className="mb-2 font-bold">المبيعات حسب طريقة الدفع</h3>
           <Table head={["الطريقة", "العدد", "المبلغ"]} empty={!inv.length}>
-            {Object.keys(M).map((m) => { const r = inv.filter((i) => i.method === m); return r.length ? <tr key={m}><td className={td}>{M[m]}</td><td className={td}>{r.length}</td><td className={td + " font-bold"}>{fmt(r.reduce((a, i) => a + i.total, 0))}</td></tr> : null; })}
+            {Object.keys(M).map((m) => { const r = inv.filter((i) => i.method.toLowerCase() === m); return r.length ? <tr key={m}><td className={td}>{M[m]}</td><td className={td}>{r.length}</td><td className={td + " font-bold"}>{fmt(r.reduce((a, i) => a + i.total, 0))}</td></tr> : null; })}
           </Table>
         </div>
         <div>

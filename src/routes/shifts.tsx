@@ -14,7 +14,7 @@ export const Route = createFileRoute("/shifts")({
 function shiftTotals(db: DB, s: Shift) {
   const end = s.closedAt ?? new Date(Date.now() + 1000).toISOString();
   const inv = db.invoices.filter((i) => !i.voided && i.createdAt >= s.openedAt && i.createdAt <= end);
-  const by = (m: string) => inv.filter((i) => i.method === m).reduce((a, i) => a + i.total, 0);
+  const by = (m: string) => inv.filter((i) => i.method.toLowerCase() === m).reduce((a, i) => a + i.total, 0);
   const exp = db.expenses.filter((e) => e.method === "cash" && e.date >= s.openedAt && e.date <= end).reduce((a, e) => a + e.amount, 0);
   const cash = by("cash");
   return { count: inv.length, cash, card: by("card"), credit: by("credit"), other: by("other"), exp, expected: s.openingCash + cash - exp };
