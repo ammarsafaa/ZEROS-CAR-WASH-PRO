@@ -1,3 +1,4 @@
+import { SqlGate } from "@/components/SqlGate";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -114,14 +115,12 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  useEffect(() => {
-    void import("@/lib/sync").then((m) => m.initSync()).catch(() => {});
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <SqlGate>
+        <Outlet />
+      </SqlGate>
     </QueryClientProvider>
   );
 }

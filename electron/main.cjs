@@ -77,6 +77,19 @@ ipcMain.handle("lan-start", () => lanStart());
 ipcMain.handle("lan-stop", () => lanStop());
 ipcMain.handle("lan-status", () => ({ running: !!lanServer, ips: lan.localIPs(), port: lan.PORT }));
 
+// ---- SQL Server storage (required) ----
+const store = require("./sqlstore.cjs");
+const SQL_CFG = path.join(app.getPath("userData"), "sql-config.json");
+const err = (e) => String((e && e.message) || e);
+ipcMain.handle("sql-get-config", () => { const c = store.readCfg(SQL_CFG); if (c) delete c.password; return { config: c, connected: store.connected() }; });
+ipcMain.handle("sql-test", async (_e, c) => { try { return { ok: true, version: await store.test(c) }; } catch (e) { return { ok: false, error: err(e) }; } });
+ipcMain.handle("sql-connect", async (_e, c) => {
+  try { const cfg = c || store.readCfg(SQL_CFG); if (!cfg) return { ok: false, error: "no-config" };
+    await store.open(cfg); if (c) store.writeCfg(SQL_CFG, c); return { ok: true }; } catch (e) { return { ok: false, error: err(e) }; }
+});
+ipcMain.handle("sql-load", async () => { try { return { ok: true, ...(await store.load()) }; } catch (e) { return { ok: false, error: err(e) }; } });
+ipcMain.handle("sql-save", async (_e, db) => { try { return await store.save(db); } catch (e) { return { ok: false, error: err(e) }; } });
+
 app.whenReady().then(() => {
   Menu.setApplicationMenu(null);
   protocol.handle("app", (req) => {

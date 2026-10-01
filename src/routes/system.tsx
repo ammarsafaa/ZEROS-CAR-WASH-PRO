@@ -5,11 +5,10 @@ import { AppLayout } from "@/components/AppLayout";
 import { requireAuth } from "./index";
 import { UpdatePanel } from "@/components/UpdatePanel";
 import { saveDB, logAudit, listBackups, makeAutoBackup, restoreAutoBackup, machineId, getLicense, activateLicense, trialDaysLeft, getSession } from "@/lib/db";
-import { getSyncConfig, setSyncConfig, syncStatus, testConnection, pushNow, type SyncMode } from "@/lib/sync";
+import { syncStatus, nativeSql } from "@/lib/sync";
+import { SqlSetupForm } from "@/components/SqlGate";
 import { useDB, Field, Table, inputCls, btnPrimary, btnGhost, td } from "@/components/kit";
 
-interface NativeLan { lanStart(): Promise<{ ok: boolean; ips?: string[]; port?: number; error?: string }>; lanStop(): Promise<{ ok: boolean }>; lanStatus(): Promise<{ running: boolean; ips: string[]; port: number }>; }
-const native = (): NativeLan | null => (window as unknown as { cwpNative?: NativeLan }).cwpNative ?? null;
 
 export const Route = createFileRoute("/system")({
   beforeLoad: () => requireAuth(),
@@ -69,94 +68,28 @@ function SystemPage() {
             </>
           )}
         </section>
-        <NetworkSection isAdmin={isAdmin} user={user} db={db} />
+        <SqlSection isAdmin={isAdmin} />
         <UpdatePanel />
       </div>
     </AppLayout>
   );
 }
 
-function NetworkSection({ isAdmin, user, db }: { isAdmin: boolean; user: string; db: ReturnType<typeof useDB>[0] }) {
-  const [mode, setMode] = useState<SyncMode>("off");
-  const [url, setUrl] = useState("");
-  const [ips, setIps] = useState<string[]>([]);
-  const [running, setRunning] = useState(false);
-  const [status, setStatus] = useState(syncStatus());
-  const isDesktop = !!native();
-
-  useEffect(() => {
-    const cfg = getSyncConfig();
-    setMode(cfg.mode);
-    setUrl(cfg.url || "");
-    void native()?.lanStatus().then((s) => { setRunning(s.running); setIps(s.ips); });
-    const t = setInterval(() => setStatus(syncStatus()), 3000);
-    return () => clearInterval(t);
-  }, []);
-
-  const enableServer = async () => {
-    const n = native();
-    if (!n) return alert("وضع الجهاز الرئيسي يعمل فقط من نسخة سطح المكتب");
-    const r = await n.lanStart();
-    if (!r.ok) return alert("تعذر تشغيل الشبكة: " + (r.error || ""));
-    setRunning(true); setIps(r.ips || []);
-    setSyncConfig({ mode: "server" }); setMode("server");
-    logAudit(db, user, "LAN_SERVER_ON", "تفعيل وضع الجهاز الرئيسي"); saveDB(db);
-    void pushNow();
-  };
-  const disable = async () => {
-    if (mode === "server") await native()?.lanStop();
-    setSyncConfig({ mode: "off" }); setMode("off"); setRunning(false);
-    logAudit(db, user, "LAN_OFF", "إيقاف الربط الشبكي"); saveDB(db);
-  };
-  const connectClient = async () => {
-    const u = url.trim().replace(/\/+$/, "");
-    if (!u) return alert("أدخل عنوان الجهاز الرئيسي");
-    const full = u.startsWith("http") ? u : `http://${u}`;
-    if (!(await testConnection(full))) return alert("تعذر الاتصال بالجهاز الرئيسي — تأكد من العنوان وأن الجهازين على نفس الشبكة");
-    setSyncConfig({ mode: "client", url: full }); setMode("client");
-    logAudit(db, user, "LAN_CLIENT_ON", full); saveDB(db);
-    setTimeout(() => location.reload(), 800);
-  };
-
+function SqlSection({ isAdmin }: { isAdmin: boolean }) {
+  const [info, setInfo] = useState<{ server?: string; instance?: string; database?: string } | null>(null);
+  const [edit, setEdit] = useState(false);
+  const [, tick] = useState(0);
+  useEffect(() => { void nativeSql()?.sqlGetConfig().then((r) => setInfo(r.config)); const t = setInterval(() => tick((x) => x + 1), 3000); return () => clearInterval(t); }, [edit]);
+  if (!nativeSql()) return null;
+  const st = syncStatus();
   return (
-    <section className="space-y-3 rounded-xl border border-border bg-card p-5 lg:col-span-2">
-      <h2 className="flex items-center gap-2 font-bold"><Network className="h-5 w-5 text-primary" /> الربط بين الأجهزة (شبكة محلية)</h2>
-      <p className="text-sm text-muted-foreground">
-        لمشاركة نفس البيانات بين عدة أجهزة: جهاز واحد يكون <b>رئيسي</b> (يخزن البيانات)، وباقي الأجهزة تفتح البرنامج من المتصفح عبر عنوانه — بدون إنترنت، فقط راوتر مشترك.
-      </p>
-      {mode === "off" && (
-        <div className="flex flex-wrap items-end gap-4">
-          {isDesktop && isAdmin && (
-            <button className={btnPrimary} onClick={() => void enableServer()}>تفعيل هذا الجهاز كجهاز رئيسي</button>
-          )}
-          <div className="flex items-end gap-2">
-            <Field label="عنوان الجهاز الرئيسي (للأجهزة الفرعية)">
-              <input dir="ltr" placeholder="192.168.1.10:8787" className={inputCls + " w-56 font-mono"} value={url} onChange={(e) => setUrl(e.target.value)} />
-            </Field>
-            <button className={btnPrimary} onClick={() => void connectClient()}>اتصال كجهاز فرعي</button>
-          </div>
-        </div>
-      )}
-      {mode === "server" && (
-        <div className="space-y-2">
-          <div className="rounded-lg bg-primary/10 p-3 text-sm"><b className="text-primary">هذا الجهاز هو الرئيسي</b> — الأجهزة الأخرى تفتح أحد هذه العناوين بالمتصفح:</div>
-          {ips.map((ip) => (
-            <div key={ip} dir="ltr" className="w-fit rounded-lg border border-border bg-muted px-3 py-2 font-mono text-sm font-bold">http://{ip}:8787</div>
-          ))}
-          <div className="text-xs text-muted-foreground">آخر مزامنة: {status.lastSyncAt ? new Date(status.lastSyncAt).toLocaleTimeString("ar-IQ") : "—"} {status.lastError && <span className="text-destructive">— خطأ: {status.lastError}</span>}</div>
-          {isAdmin && <button className={btnGhost} onClick={() => void disable()}>إيقاف الوضع الرئيسي</button>}
-        </div>
-      )}
-      {mode === "client" && (
-        <div className="space-y-2">
-          <div className="rounded-lg bg-primary/10 p-3 text-sm"><b className="text-primary">هذا الجهاز فرعي</b> — متصل بالجهاز الرئيسي: <span dir="ltr" className="font-mono">{getSyncConfig().url}</span></div>
-          <div className="text-xs text-muted-foreground">آخر مزامنة: {status.lastSyncAt ? new Date(status.lastSyncAt).toLocaleTimeString("ar-IQ") : "—"} {status.lastError && <span className="text-destructive">— خطأ: {status.lastError}</span>}</div>
-          <button className={btnGhost} onClick={() => void disable()}>فصل الاتصال</button>
-        </div>
-      )}
-      {!isDesktop && mode === "off" && (
-        <p className="text-xs text-muted-foreground">ملاحظة: هذا الجهاز يعمل بالمتصفح، لذا يمكنه الاتصال كجهاز فرعي فقط. الجهاز الرئيسي يجب أن يشغّل نسخة سطح المكتب.</p>
-      )}
+    <section className="space-y-3 rounded-xl border border-border bg-card p-4">
+      <h2 className="flex items-center gap-2 font-bold"><Network className="h-4 w-4 text-primary" /> قاعدة البيانات (SQL Server)</h2>
+      <div className="text-sm" dir="ltr">{info ? `${info.server}${info.instance ? "\\" + info.instance : ""} / ${info.database}` : "—"}</div>
+      <div className={`rounded-lg p-2 text-sm ${st.lastError ? "bg-destructive/15 text-destructive" : "bg-muted"}`}>
+        {st.lastError ? "خطأ بالاتصال: " + st.lastError : `متصل — آخر مزامنة ${st.lastSyncAt ? new Date(st.lastSyncAt).toLocaleTimeString() : "—"}`}
+      </div>
+      {isAdmin && (edit ? <SqlSetupForm onDone={() => setEdit(false)} /> : <button className={btnGhost} onClick={() => setEdit(true)}>تغيير إعدادات الاتصال</button>)}
     </section>
   );
 }
