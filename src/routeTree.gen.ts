@@ -20,6 +20,7 @@ import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as QueueRouteImport } from './routes/queue'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SalesRouteImport } from './routes/sales'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ShiftsRouteImport } from './routes/shifts'
@@ -81,6 +82,11 @@ const ReportsRoute = ReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SalesRoute = SalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
+  '/sales': typeof SalesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
@@ -137,6 +144,7 @@ export interface FileRoutesByTo {
   '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
+  '/sales': typeof SalesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
@@ -156,6 +164,7 @@ export interface FileRoutesById {
   '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
+  '/sales': typeof SalesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/pos'
     | '/queue'
     | '/reports'
+    | '/sales'
     | '/services'
     | '/settings'
     | '/shifts'
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/pos'
     | '/queue'
     | '/reports'
+    | '/sales'
     | '/services'
     | '/settings'
     | '/shifts'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/pos'
     | '/queue'
     | '/reports'
+    | '/sales'
     | '/services'
     | '/settings'
     | '/shifts'
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   PosRoute: typeof PosRoute
   QueueRoute: typeof QueueRoute
   ReportsRoute: typeof ReportsRoute
+  SalesRoute: typeof SalesRoute
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
   ShiftsRoute: typeof ShiftsRoute
@@ -317,6 +330,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sales': {
+      id: '/sales'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof SalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -367,6 +387,7 @@ const rootRouteChildren: RootRouteChildren = {
   PosRoute: PosRoute,
   QueueRoute: QueueRoute,
   ReportsRoute: ReportsRoute,
+  SalesRoute: SalesRoute,
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
   ShiftsRoute: ShiftsRoute,
