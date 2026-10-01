@@ -13,8 +13,10 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PosRouteImport } from './routes/pos'
 import { Route as QueueRouteImport } from './routes/queue'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
 
 const IndexRoute = IndexRouteImport.update({
@@ -37,6 +39,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PosRoute = PosRouteImport.update({
+  id: '/pos',
+  path: '/pos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QueueRoute = QueueRouteImport.update({
   id: '/queue',
   path: '/queue',
@@ -45,6 +52,11 @@ const QueueRoute = QueueRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VehiclesRoute = VehiclesRouteImport.update({
@@ -58,8 +70,10 @@ export interface FileRoutesByFullPath {
   '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
   '/login': typeof LoginRoute
+  '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
   '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
   '/vehicles': typeof VehiclesRoute
 }
 export interface FileRoutesByTo {
@@ -67,8 +81,10 @@ export interface FileRoutesByTo {
   '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
   '/login': typeof LoginRoute
+  '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
   '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
   '/vehicles': typeof VehiclesRoute
 }
 export interface FileRoutesById {
@@ -77,8 +93,10 @@ export interface FileRoutesById {
   '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
   '/login': typeof LoginRoute
+  '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
   '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
   '/vehicles': typeof VehiclesRoute
 }
 export interface FileRouteTypes {
@@ -88,8 +106,10 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/customers'
     | '/login'
+    | '/pos'
     | '/queue'
     | '/services'
+    | '/settings'
     | '/vehicles'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -97,8 +117,10 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/customers'
     | '/login'
+    | '/pos'
     | '/queue'
     | '/services'
+    | '/settings'
     | '/vehicles'
   id:
     | '__root__'
@@ -106,8 +128,10 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/customers'
     | '/login'
+    | '/pos'
     | '/queue'
     | '/services'
+    | '/settings'
     | '/vehicles'
   fileRoutesById: FileRoutesById
 }
@@ -116,8 +140,10 @@ export interface RootRouteChildren {
   CheckinRoute: typeof CheckinRoute
   CustomersRoute: typeof CustomersRoute
   LoginRoute: typeof LoginRoute
+  PosRoute: typeof PosRoute
   QueueRoute: typeof QueueRoute
   ServicesRoute: typeof ServicesRoute
+  SettingsRoute: typeof SettingsRoute
   VehiclesRoute: typeof VehiclesRoute
 }
 
@@ -151,6 +177,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pos': {
+      id: '/pos'
+      path: '/pos'
+      fullPath: '/pos'
+      preLoaderRoute: typeof PosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/queue': {
       id: '/queue'
       path: '/queue'
@@ -163,6 +196,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vehicles': {
@@ -180,8 +220,10 @@ const rootRouteChildren: RootRouteChildren = {
   CheckinRoute: CheckinRoute,
   CustomersRoute: CustomersRoute,
   LoginRoute: LoginRoute,
+  PosRoute: PosRoute,
   QueueRoute: QueueRoute,
   ServicesRoute: ServicesRoute,
+  SettingsRoute: SettingsRoute,
   VehiclesRoute: VehiclesRoute,
 }
 export const routeTree = rootRouteImport
