@@ -9,7 +9,7 @@ export const Route = createFileRoute("/pos")({
   beforeLoad: () => requireAuth(),
   head: () => ({
     meta: [
-      { title: "الكاشير والفواتير — CAR WASH PRO" },
+      { title: "الكاشير والفواتير — ZEROS CAR WASH PRO" },
       { name: "description", content: "إصدار الفواتير والدفع والطباعة الحرارية 80mm" },
     ],
   }),

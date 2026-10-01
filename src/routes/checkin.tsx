@@ -9,7 +9,7 @@ export const Route = createFileRoute("/checkin")({
   beforeLoad: () => requireAuth(),
   head: () => ({
     meta: [
-      { title: "استقبال سيارة — CAR WASH PRO" },
+      { title: "استقبال سيارة — ZEROS CAR WASH PRO" },
       { name: "description", content: "تسجيل دخول سيارة جديدة واختيار الخدمات" },
     ],
   }),

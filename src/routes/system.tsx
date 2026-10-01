@@ -9,7 +9,7 @@ import { useDB, Field, Table, inputCls, btnPrimary, btnGhost, td } from "@/compo
 
 export const Route = createFileRoute("/system")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "النسخ الاحتياطي والترخيص — CAR WASH PRO" }, { name: "description", content: "النسخ الاحتياطي التلقائي وتفعيل ترخيص البرنامج" }] }),
+  head: () => ({ meta: [{ title: "النسخ الاحتياطي والترخيص — ZEROS CAR WASH PRO" }, { name: "description", content: "النسخ الاحتياطي التلقائي وتفعيل ترخيص البرنامج" }] }),
   component: SystemPage,
 });
 

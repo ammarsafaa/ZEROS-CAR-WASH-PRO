@@ -8,7 +8,7 @@ import { useDB, Modal, Field, Table, Tabs, inputCls, btnPrimary, btnGhost, btnDa
 
 export const Route = createFileRoute("/products")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "الزيوت وقطع الغيار — CAR WASH PRO" }, { name: "description", content: "زيوت المحرك والفلاتر وقطع الغيار وسجل تبديل الزيت" }] }),
+  head: () => ({ meta: [{ title: "الزيوت وقطع الغيار — ZEROS CAR WASH PRO" }, { name: "description", content: "زيوت المحرك والفلاتر وقطع الغيار وسجل تبديل الزيت" }] }),
   component: ProductsPage,
 });
 

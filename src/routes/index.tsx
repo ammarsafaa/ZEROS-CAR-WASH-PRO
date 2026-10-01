@@ -12,9 +12,9 @@ export const Route = createFileRoute("/")({
   beforeLoad: () => requireAuth(),
   head: () => ({
     meta: [
-      { title: "لوحة التحكم — CAR WASH PRO" },
+      { title: "لوحة التحكم — ZEROS CAR WASH PRO" },
       { name: "description", content: "لوحة تحكم نظام إدارة مغسلة السيارات: مبيعات اليوم، الطابور، والإحصائيات" },
-      { property: "og:title", content: "CAR WASH PRO — لوحة التحكم" },
+      { property: "og:title", content: "ZEROS CAR WASH PRO — لوحة التحكم" },
       { property: "og:description", content: "نظام إدارة مغسلة سيارات يعمل بدون إنترنت" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

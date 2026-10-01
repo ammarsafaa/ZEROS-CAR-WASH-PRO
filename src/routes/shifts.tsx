@@ -7,7 +7,7 @@ import { useDB, Field, Table, Stat, inputCls, btnPrimary, td } from "@/component
 
 export const Route = createFileRoute("/shifts")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "الورديات والصندوق — CAR WASH PRO" }, { name: "description", content: "فتح وإغلاق الورديات وجرد الصندوق" }] }),
+  head: () => ({ meta: [{ title: "الورديات والصندوق — ZEROS CAR WASH PRO" }, { name: "description", content: "فتح وإغلاق الورديات وجرد الصندوق" }] }),
   component: ShiftsPage,
 });
 

@@ -7,7 +7,7 @@ import { useDB, Table, DateRange, Stat, btnGhost, td } from "@/components/kit";
 
 export const Route = createFileRoute("/reports")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "التقارير — CAR WASH PRO" }, { name: "description", content: "تقارير المبيعات والمصروفات والأرباح" }] }),
+  head: () => ({ meta: [{ title: "التقارير — ZEROS CAR WASH PRO" }, { name: "description", content: "تقارير المبيعات والمصروفات والأرباح" }] }),
   component: ReportsPage,
 });
 

@@ -223,7 +223,7 @@ function seed(): Omit<DB, (typeof ARRAYS)[number]> {
     orders: [],
     invoices: [],
     settings: {
-      businessName: "ZEROS CAR WASH PRO",
+      businessName: "ZEROS ZEROS CAR WASH PRO",
       phone: "",
       address: "",
       currency: "IQD",

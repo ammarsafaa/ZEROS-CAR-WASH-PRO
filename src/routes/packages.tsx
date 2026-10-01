@@ -8,7 +8,7 @@ import { useDB, Modal, Field, Table, Tabs, inputCls, btnPrimary, btnGhost, td } 
 
 export const Route = createFileRoute("/packages")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "الاشتراكات والباقات — CAR WASH PRO" }, { name: "description", content: "باقات الغسيل الشهرية واشتراكات العملاء" }] }),
+  head: () => ({ meta: [{ title: "الاشتراكات والباقات — ZEROS CAR WASH PRO" }, { name: "description", content: "باقات الغسيل الشهرية واشتراكات العملاء" }] }),
   component: PackagesPage,
 });
 

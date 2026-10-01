@@ -6,7 +6,7 @@ import { useDB, Table, Stat, btnPrimary, btnGhost, td } from "@/components/kit";
 
 export const Route = createFileRoute("/dayclose")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "إغلاق اليوم — CAR WASH PRO" }, { name: "description", content: "ملخص وإغلاق اليوم مع نسخة احتياطية" }] }),
+  head: () => ({ meta: [{ title: "إغلاق اليوم — ZEROS CAR WASH PRO" }, { name: "description", content: "ملخص وإغلاق اليوم مع نسخة احتياطية" }] }),
   component: DayClosePage,
 });
 

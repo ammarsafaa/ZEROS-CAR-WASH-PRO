@@ -8,7 +8,7 @@ import { useDB, inputCls, btnPrimary, btnGhost } from "@/components/kit";
 
 export const Route = createFileRoute("/sales")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "شاشة المبيعات — CAR WASH PRO" }, { name: "description", content: "بيع الخدمات والزيوت وقطع الغيار بسرعة مع الباركود" }] }),
+  head: () => ({ meta: [{ title: "شاشة المبيعات — ZEROS CAR WASH PRO" }, { name: "description", content: "بيع الخدمات والزيوت وقطع الغيار بسرعة مع الباركود" }] }),
   component: SalesPage,
 });
 

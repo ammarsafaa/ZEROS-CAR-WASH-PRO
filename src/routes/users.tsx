@@ -8,7 +8,7 @@ import { useDB, Modal, Field, Table, inputCls, btnPrimary, btnGhost, td } from "
 
 export const Route = createFileRoute("/users")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "المستخدمون والصلاحيات — CAR WASH PRO" }, { name: "description", content: "إدارة حسابات الموظفين وأدوارهم" }] }),
+  head: () => ({ meta: [{ title: "المستخدمون والصلاحيات — ZEROS CAR WASH PRO" }, { name: "description", content: "إدارة حسابات الموظفين وأدوارهم" }] }),
   component: UsersPage,
 });
 

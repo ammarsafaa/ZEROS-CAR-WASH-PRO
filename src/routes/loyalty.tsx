@@ -7,7 +7,7 @@ import { useDB, Field, Table, Stat, inputCls, btnPrimary, btnGhost, td } from "@
 
 export const Route = createFileRoute("/loyalty")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "برنامج الولاء — CAR WASH PRO" }, { name: "description", content: "نقاط الولاء للعملاء وإعدادات الاستبدال" }] }),
+  head: () => ({ meta: [{ title: "برنامج الولاء — ZEROS CAR WASH PRO" }, { name: "description", content: "نقاط الولاء للعملاء وإعدادات الاستبدال" }] }),
   component: LoyaltyPage,
 });
 

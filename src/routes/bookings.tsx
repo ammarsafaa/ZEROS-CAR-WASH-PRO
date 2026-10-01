@@ -8,7 +8,7 @@ import { useDB, Modal, Field, Table, inputCls, btnPrimary, btnGhost, btnDanger, 
 
 export const Route = createFileRoute("/bookings")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "الحجوزات — CAR WASH PRO" }, { name: "description", content: "حجز مواعيد الغسيل المسبقة" }] }),
+  head: () => ({ meta: [{ title: "الحجوزات — ZEROS CAR WASH PRO" }, { name: "description", content: "حجز مواعيد الغسيل المسبقة" }] }),
   component: BookingsPage,
 });
 

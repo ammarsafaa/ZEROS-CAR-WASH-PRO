@@ -8,7 +8,7 @@ import { useDB, Stat, inputCls } from "@/components/kit";
 
 export const Route = createFileRoute("/history")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "سجل السيارات — CAR WASH PRO" }, { name: "description", content: "السجل الكامل لكل سيارة: غسيل وزيوت وفواتير" }] }),
+  head: () => ({ meta: [{ title: "سجل السيارات — ZEROS CAR WASH PRO" }, { name: "description", content: "السجل الكامل لكل سيارة: غسيل وزيوت وفواتير" }] }),
   component: HistoryPage,
 });
 
