@@ -5,7 +5,7 @@
 import { getDB, type DB } from "./db";
 
 export type SyncMode = "off" | "server" | "client";
-export interface SyncConfig { mode: SyncMode; url?: string; }
+export interface SyncConfig { mode: SyncMode; url?: string | undefined; }
 
 const CFG_KEY = "cwp_sync_cfg";
 const PORT = 8787;
