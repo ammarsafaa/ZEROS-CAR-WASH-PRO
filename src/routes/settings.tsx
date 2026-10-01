@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Download, Upload, Save } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
+import { UpdatePanel } from "@/components/UpdatePanel";
 import { requireAuth } from "./index";
 import { getDB, saveDB, logAudit, getSession, hashPassword, type DB } from "@/lib/db";
 
