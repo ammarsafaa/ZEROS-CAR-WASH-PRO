@@ -104,6 +104,12 @@ function QueuePage() {
                     <span key={i} className="rounded bg-muted px-2 py-0.5 text-xs">{it.name}</span>
                   ))}
                 </div>
+                <button className="mt-2 w-full rounded-lg border border-border py-1 text-xs hover:bg-muted" onClick={() => {
+                  const w = window.open("", "_blank", "width=320,height=480");
+                  if (!w) return;
+                  w.document.write(`<html dir="rtl"><body style="font-family:sans-serif;width:72mm;margin:0;padding:4mm;font-size:12px"><div style="text-align:center;font-weight:bold;font-size:14px">${db.settings.businessName}</div><hr/><div style="text-align:center;font-size:22px;font-weight:bold">${o.code}</div><div>اللوحة: <b>${v?.plate ?? ""}</b></div><div>السيارة: ${v ? v.make + " " + v.model : ""}</div><div>العميل: ${c?.name ?? ""} ${c?.phone ?? ""}</div><div>الوقت: ${new Date(o.createdAt).toLocaleString("ar-IQ")}</div><hr/>${o.items.map((i) => "<div>• " + i.name + "</div>").join("")}<hr/><div style="text-align:center">احتفظ بهذه البطاقة لاستلام سيارتك</div></body></html>`);
+                  w.document.close(); w.focus(); w.print(); w.close();
+                }}>طباعة بطاقة السيارة</button>
                 <select
                   value={o.workerId ?? ""}
                   onChange={(e) => { o.workerId = e.target.value || undefined; logAudit(db, session?.username ?? "?", "ASSIGN_WORKER", o.code); saveDB(db); refresh(); }}
