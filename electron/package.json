@@ -1,0 +1,35 @@
+{
+  "name": "car-wash-pro",
+  "productName": "CAR WASH PRO",
+  "version": "1.0.0",
+  "main": "electron/main.cjs",
+  "description": "CAR WASH PRO",
+  "author": "CAR WASH PRO",
+  "build": {
+    "appId": "com.carwashpro.app",
+    "productName": "CAR WASH PRO",
+    "files": ["electron/**"],
+    "extraResources": [{ "from": "dist/client", "to": "app", "filter": ["**/*"] }],
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }],
+      "artifactName": "CarWashPro-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CAR WASH PRO",
+      "language": "1025"
+    },
+    "directories": { "output": "release" },
+    "publish": [{ "provider": "github", "owner": "ammarsafaa", "repo": "before-you-build" }]
+  },
+  "dependencies": {
+    "electron-updater": "6.3.9"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  }
+}
