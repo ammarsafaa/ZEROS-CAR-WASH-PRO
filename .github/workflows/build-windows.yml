@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -23,42 +26,42 @@ jobs:
       - name: Build desktop app (offline SPA)
         run: bunx vite build -c vite.desktop.config.ts
 
+      - name: Verify app output
+        shell: bash
+        run: test -f dist/client/index.html
+
       - name: Stage Electron app
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force stage/app/electron | Out-Null
-          New-Item -ItemType Directory -Force stage/app/dist | Out-Null
-          Copy-Item electron/main.cjs stage/app/electron/
-          Copy-Item -Recurse dist/client stage/app/dist/client
-          '{"name":"carwashpro","productName":"CAR WASH PRO","version":"1.0.0","main":"electron/main.cjs"}' | Set-Content -Encoding utf8NoBOM stage/app/package.json
+          New-Item -ItemType Directory -Force pkg | Out-Null
+          Copy-Item electron -Destination pkg/electron -Recurse -Force
+          New-Item -ItemType Directory -Force pkg/dist | Out-Null
+          Copy-Item dist/client -Destination pkg/dist/client -Recurse -Force
+          Copy-Item electron/package.json -Destination pkg/package.json -Force
 
-      - name: Package Windows executable
-        run: npx --yes @electron/packager@18 stage/app "CAR WASH PRO" --platform=win32 --arch=x64 --electron-version=33.2.1 --out=installer --overwrite
-
-      - name: Install Inno Setup
-        shell: pwsh
+      - name: Package installer
+        shell: bash
         run: |
-          if (-not (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+          cd pkg
+          npm version "1.0.${{ github.run_number }}" --no-git-tag-version --allow-same-version
+          npm install --no-audit --no-fund
+          npx electron-builder --win --publish never
+          test -f release/win-unpacked/resources/app/index.html
 
-      - name: Build Setup.exe
-        shell: pwsh
+      - name: Publish update (GitHub Release)
+        shell: bash
         run: |
-          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          $langDir = "C:\Program Files (x86)\Inno Setup 6\Languages"
-          if (-not (Test-Path "$langDir\Arabic.isl")) {
-            (Get-Content installer/CarWashPro.iss) | Where-Object { $_ -notmatch 'Arabic.isl' } | Set-Content -Encoding utf8 installer/CarWashPro.iss
-          }
-          & $iscc installer/CarWashPro.iss
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          VERSION="1.0.${{ github.run_number }}"
+          gh release create "v${VERSION}" \
+            pkg/release/*.exe \
+            pkg/release/*.blockmap \
+            pkg/release/latest.yml \
+            --title "CAR WASH PRO v${VERSION}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload installer
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: CarWashPro-Setup
-          path: installer/Output/*.exe
-
-      - name: Upload portable version
-        uses: actions/upload-artifact@v4
-        with:
-          name: CarWashPro-Portable
-          path: installer/CAR WASH PRO-win32-x64
+          path: pkg/release/*.exe

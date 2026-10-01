@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ShieldCheck, DatabaseBackup } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { requireAuth } from "./index";
+import { UpdatePanel } from "@/components/UpdatePanel";
 import { saveDB, logAudit, listBackups, makeAutoBackup, restoreAutoBackup, machineId, getLicense, activateLicense, trialDaysLeft, getSession } from "@/lib/db";
 import { useDB, Field, Table, inputCls, btnPrimary, btnGhost, td } from "@/components/kit";
 
@@ -64,6 +65,7 @@ function SystemPage() {
             </>
           )}
         </section>
+        <UpdatePanel />
       </div>
     </AppLayout>
   );
