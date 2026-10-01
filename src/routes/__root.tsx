@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ZEROS ZEROS CAR WASH PRO — نظام إدارة مغسلة السيارات" },
+      { title: "ZEROS CAR WASH PRO — نظام إدارة مغسلة السيارات" },
       { name: "description", content: "نظام إدارة مغسلة سيارات يعمل بدون إنترنت" },
     ],
     links: [
@@ -113,6 +113,10 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    void import("@/lib/sync").then((m) => m.initSync()).catch(() => {});
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

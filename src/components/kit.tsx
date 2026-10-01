@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { getDB, getSession, type DB } from "@/lib/db";
 
 export const inputCls = "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm";
@@ -8,9 +8,15 @@ export const btnGhost = "inline-flex items-center gap-1 rounded-lg border border
 export const btnDanger = "inline-flex items-center gap-1 rounded-lg border border-destructive/40 px-3 py-1.5 text-xs text-destructive hover:bg-destructive/10";
 
 export function useDB(): [DB, () => void, string] {
-  const [, setV] = useState(0);
-  const db = useMemo(() => getDB(), []);
-  return [db, () => setV((v) => v + 1), getSession()?.username ?? "?"];
+  const [v, setV] = useState(0);
+  const db = useMemo(() => getDB(), [v]);
+  // Re-render when a LAN sync pull brings newer data from the main device
+  useEffect(() => {
+    const h = () => setV((x) => x + 1);
+    window.addEventListener("cwp-sync", h);
+    return () => window.removeEventListener("cwp-sync", h);
+  }, []);
+  return [db, () => setV((x) => x + 1), getSession()?.username ?? "?"];
 }
 
 export function Modal({ title, onClose, children, onSubmit, wide }: { title: string; onClose: () => void; children: ReactNode; onSubmit: (e: React.FormEvent) => void; wide?: boolean }) {

@@ -121,6 +121,7 @@ export interface AuditEntry {
 }
 
 export interface DB {
+  meta?: { savedAt: string };
   users: User[];
   customers: Customer[];
   vehicles: Vehicle[];
@@ -253,7 +254,10 @@ function migrate(db: DB): DB {
 }
 
 export function saveDB(db: DB): void {
+  db.meta = { savedAt: new Date().toISOString() };
   localStorage.setItem(KEY, JSON.stringify(db));
+  // LAN sync (no-op when sync is off). Dynamic import avoids a module cycle.
+  void import("./sync").then((m) => m.schedulePush()).catch(() => {});
 }
 
 export function nextCode(db: DB, prefix: string, yearly = false): string {

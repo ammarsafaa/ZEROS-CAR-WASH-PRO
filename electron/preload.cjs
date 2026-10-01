@@ -10,4 +10,8 @@ contextBridge.exposeInMainWorld("cwpNative", {
     ipcRenderer.on("update-status", h);
     return () => ipcRenderer.removeListener("update-status", h);
   },
+  // LAN main-device mode
+  lanStart: () => ipcRenderer.invoke("lan-start"),
+  lanStop: () => ipcRenderer.invoke("lan-stop"),
+  lanStatus: () => ipcRenderer.invoke("lan-status"),
 });
