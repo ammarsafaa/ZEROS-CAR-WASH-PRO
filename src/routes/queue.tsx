@@ -104,6 +104,14 @@ function QueuePage() {
                     <span key={i} className="rounded bg-muted px-2 py-0.5 text-xs">{it.name}</span>
                   ))}
                 </div>
+                <select
+                  value={o.workerId ?? ""}
+                  onChange={(e) => { o.workerId = e.target.value || undefined; logAudit(db, session?.username ?? "?", "ASSIGN_WORKER", o.code); saveDB(db); refresh(); }}
+                  className="mt-2 w-full rounded-lg border border-input bg-background px-2 py-1.5 text-xs"
+                >
+                  <option value="">— تعيين عامل —</option>
+                  {db.workers.filter((w) => w.active).map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}
+                </select>
                 <div className="mt-3 flex items-center justify-between">
                   <span className="font-bold text-primary">{fmt(o.total)}</span>
                   <div className="flex gap-1.5">
