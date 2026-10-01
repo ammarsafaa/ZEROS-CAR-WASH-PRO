@@ -20,6 +20,7 @@ import {
   Ticket,
   CalendarClock,
   BarChart3,
+  UserCog,
   ShoppingCart,
   Droplets,
   TicketPercent,
@@ -39,6 +40,8 @@ import {
   autoBackupIfDue,
   getLicense,
   trialDaysLeft,
+  canAccess,
+  ROLE_LABEL,
   type Lang,
 } from "@/lib/db";
 
@@ -64,6 +67,7 @@ const NAV = [
   { to: "/reports", ar: "التقارير", en: "Reports", icon: BarChart3 },
   { to: "/dayclose", ar: "إغلاق اليوم", en: "Day Close", icon: CalendarCheck },
   { to: "/system", ar: "النسخ والترخيص", en: "Backup & License", icon: ShieldCheck },
+  { to: "/users", ar: "المستخدمون والصلاحيات", en: "Users & Roles", icon: UserCog },
   { to: "/settings", ar: "الإعدادات", en: "Settings", icon: SettingsIcon },
 ] as const;
 
@@ -92,6 +96,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
   useEffect(() => {
     autoBackupIfDue();
     if (!getLicense() && trialDaysLeft() <= 0 && pathname !== "/system") navigate({ to: "/system" });
+    else if (!canAccess(getSession()?.role, pathname)) navigate({ to: "/" });
   }, [pathname, navigate]);
 
   useEffect(() => {
@@ -122,7 +127,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
           </div>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          {NAV.map((item) => {
+          {NAV.filter((item) => canAccess(session?.role, item.to)).map((item) => {
             const active = pathname === item.to;
             const Icon = item.icon;
             return (
@@ -144,7 +149,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
         <div className="border-t border-sidebar-border p-3">
           <div className="mb-2 rounded-lg bg-sidebar-border/40 px-3 py-2 text-xs">
             <div className="font-semibold">{session?.name}</div>
-            <div className="opacity-60">{session?.role}</div>
+            <div className="opacity-60">{session ? ROLE_LABEL[session.role] : ""}</div>
           </div>
           <button
             onClick={() => {

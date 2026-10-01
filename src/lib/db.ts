@@ -440,3 +440,19 @@ export function trialDaysLeft(): number {
   if (!f) { f = new Date().toISOString(); localStorage.setItem(FIRST_KEY, f); }
   return Math.max(0, 30 - Math.floor((Date.now() - new Date(f).getTime()) / 86400000));
 }
+
+// ---- role permissions (route access) ----
+export const ROLE_LABEL: Record<Role, string> = { admin: "مدير النظام", manager: "مدير", cashier: "كاشير", supervisor: "مشرف", worker: "عامل" };
+const ALL = "*";
+export const ROLE_ROUTES: Record<Role, string[]> = {
+  admin: [ALL],
+  manager: ["/", "/sales", "/checkin", "/queue", "/pos", "/customers", "/vehicles", "/services", "/history", "/products", "/bookings", "/workers", "/shifts", "/expenses", "/inventory", "/packages", "/coupons", "/loyalty", "/reports", "/dayclose", "/system", "/settings"],
+  cashier: ["/", "/sales", "/checkin", "/queue", "/pos", "/customers", "/vehicles", "/history", "/bookings", "/shifts", "/expenses", "/packages", "/loyalty", "/settings"],
+  supervisor: ["/", "/checkin", "/queue", "/customers", "/vehicles", "/history", "/bookings", "/workers", "/inventory", "/products", "/settings"],
+  worker: ["/", "/queue", "/settings"],
+};
+export function canAccess(role: Role | undefined, path: string): boolean {
+  if (!role) return false;
+  const r = ROLE_ROUTES[role];
+  return r.includes(ALL) || r.includes(path);
+}
