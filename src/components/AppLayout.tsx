@@ -160,7 +160,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
       </aside>
 
       {/* Main */}
-      <div className="ms-60 flex min-h-screen flex-1 flex-col">
+      <div className="ms-60 flex min-h-screen min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-6 py-3 backdrop-blur">
           <h1 className="text-lg font-bold">{title}</h1>
           <div className="flex items-center gap-2">

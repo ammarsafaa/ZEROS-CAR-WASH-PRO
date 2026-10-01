@@ -107,7 +107,7 @@ function SalesPage() {
     <AppLayout title="شاشة المبيعات">
       <div className="grid gap-4 xl:grid-cols-[1fr_400px]">
         {/* Catalog */}
-        <div className="print:hidden">
+        <div className="min-w-0 print:hidden">
           <div className="mb-3 flex flex-wrap gap-2">
             <div className="relative min-w-[200px] flex-1">
               <Search className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" />
