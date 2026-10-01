@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react";
 
-type UpdateStatus = { state: "available" | "none" | "downloading" | "ready" | "error"; version?: string; percent?: number; error?: string };
+type UpdateStatus = { state: "available" | "none" | "downloading" | "ready" | "error"; version?: string; percent?: number; error?: string | undefined };
 type CwpNative = {
   appVersion?: () => string;
   checkUpdate?: () => Promise<{ ok: boolean; error?: string }>;
