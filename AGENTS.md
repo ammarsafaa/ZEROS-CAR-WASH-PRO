@@ -9,3 +9,4 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 - Vendor license keys: tools/keygen.mjs <MACHINE_ID> (salt must match src/lib/db.ts) — keeps activation fully offline.
+- Desktop build: vite.desktop.config.ts (SPA shell) + electron/main.cjs serving dist/client over app:// for a stable origin; packaged with @electron/packager, installer via installer/CarWashPro.iss.

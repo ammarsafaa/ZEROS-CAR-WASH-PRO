@@ -7,3 +7,6 @@
 - [x] Day close
 - [x] Auto backup
 - [x] Offline license
+- [x] Role permissions + users
+- [x] Extra prints (car ticket)
+- [x] Windows package (ZIP + Inno Setup script)
