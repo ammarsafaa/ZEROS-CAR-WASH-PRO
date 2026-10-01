@@ -12,31 +12,37 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v5
       - uses: oven-sh/setup-bun@v2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
 
       - name: Install dependencies
         run: bun install
 
       - name: Build desktop app (offline SPA)
-        run: bunx vite build -c vite.desktop.config.ts
+        run: bun run build
+        env:
+          ELECTRON_BUILD: "1"
 
-      - name: Verify app output
+      - name: Locate HTML shell
         shell: bash
-        run: test -f dist/client/index.html
+        run: |
+          echo "Build output:"; find dist .output -maxdepth 4 -type f 2>/dev/null | grep -v '/assets/' || true
+          if [ ! -f dist/client/index.html ]; then
+            SHELL=$(find dist .output -type f \( -name '_shell.html' -o -path '*_shell/index.html' -o -name 'index.html' \) 2>/dev/null | grep -v node_modules | head -1)
+            if [ -z "$SHELL" ]; then echo "ERROR: no HTML shell produced"; exit 1; fi
+            SRC=$(dirname "$SHELL"); case "$SHELL" in *_shell/index.html) SRC=$(dirname "$SRC");; esac
+            mkdir -p dist/client
+            [ "$SRC" != "dist/client" ] && cp -r "$SRC"/. dist/client/
+            cp "$SHELL" dist/client/index.html
+          fi
+          test -f dist/client/index.html
 
       - name: Stage Electron app
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force pkg | Out-Null
+          New-Item -ItemType Directory -Force -Path pkg | Out-Null
           Copy-Item electron -Destination pkg/electron -Recurse -Force
-          New-Item -ItemType Directory -Force pkg/dist | Out-Null
-          Copy-Item dist/client -Destination pkg/dist/client -Recurse -Force
+          Copy-Item dist -Destination pkg/dist -Recurse -Force
           Copy-Item electron/package.json -Destination pkg/package.json -Force
 
       - name: Package installer
