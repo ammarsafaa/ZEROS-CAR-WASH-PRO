@@ -10,18 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as ExpensesRouteImport } from './routes/expenses'
+import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as PosRouteImport } from './routes/pos'
 import { Route as QueueRouteImport } from './routes/queue'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ShiftsRouteImport } from './routes/shifts'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
+import { Route as WorkersRouteImport } from './routes/workers'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingsRoute = BookingsRouteImport.update({
+  id: '/bookings',
+  path: '/bookings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckinRoute = CheckinRouteImport.update({
@@ -34,9 +46,24 @@ const CustomersRoute = CustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ExpensesRoute = ExpensesRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InventoryRoute = InventoryRouteImport.update({
+  id: '/inventory',
+  path: '/inventory',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PackagesRoute = PackagesRouteImport.update({
+  id: '/packages',
+  path: '/packages',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PosRoute = PosRouteImport.update({
@@ -49,6 +76,11 @@ const QueueRoute = QueueRouteImport.update({
   path: '/queue',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -59,92 +91,151 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShiftsRoute = ShiftsRouteImport.update({
+  id: '/shifts',
+  path: '/shifts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VehiclesRoute = VehiclesRouteImport.update({
   id: '/vehicles',
   path: '/vehicles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkersRoute = WorkersRouteImport.update({
+  id: '/workers',
+  path: '/workers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
+  '/expenses': typeof ExpensesRoute
+  '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
+  '/reports': typeof ReportsRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/shifts': typeof ShiftsRoute
   '/vehicles': typeof VehiclesRoute
+  '/workers': typeof WorkersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
+  '/expenses': typeof ExpensesRoute
+  '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
+  '/reports': typeof ReportsRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/shifts': typeof ShiftsRoute
   '/vehicles': typeof VehiclesRoute
+  '/workers': typeof WorkersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
   '/customers': typeof CustomersRoute
+  '/expenses': typeof ExpensesRoute
+  '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
   '/queue': typeof QueueRoute
+  '/reports': typeof ReportsRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
+  '/shifts': typeof ShiftsRoute
   '/vehicles': typeof VehiclesRoute
+  '/workers': typeof WorkersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/bookings'
     | '/checkin'
     | '/customers'
+    | '/expenses'
+    | '/inventory'
     | '/login'
+    | '/packages'
     | '/pos'
     | '/queue'
+    | '/reports'
     | '/services'
     | '/settings'
+    | '/shifts'
     | '/vehicles'
+    | '/workers'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/bookings'
     | '/checkin'
     | '/customers'
+    | '/expenses'
+    | '/inventory'
     | '/login'
+    | '/packages'
     | '/pos'
     | '/queue'
+    | '/reports'
     | '/services'
     | '/settings'
+    | '/shifts'
     | '/vehicles'
+    | '/workers'
   id:
     | '__root__'
     | '/'
+    | '/bookings'
     | '/checkin'
     | '/customers'
+    | '/expenses'
+    | '/inventory'
     | '/login'
+    | '/packages'
     | '/pos'
     | '/queue'
+    | '/reports'
     | '/services'
     | '/settings'
+    | '/shifts'
     | '/vehicles'
+    | '/workers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BookingsRoute: typeof BookingsRoute
   CheckinRoute: typeof CheckinRoute
   CustomersRoute: typeof CustomersRoute
+  ExpensesRoute: typeof ExpensesRoute
+  InventoryRoute: typeof InventoryRoute
   LoginRoute: typeof LoginRoute
+  PackagesRoute: typeof PackagesRoute
   PosRoute: typeof PosRoute
   QueueRoute: typeof QueueRoute
+  ReportsRoute: typeof ReportsRoute
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
+  ShiftsRoute: typeof ShiftsRoute
   VehiclesRoute: typeof VehiclesRoute
+  WorkersRoute: typeof WorkersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -154,6 +245,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bookings': {
+      id: '/bookings'
+      path: '/bookings'
+      fullPath: '/bookings'
+      preLoaderRoute: typeof BookingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkin': {
@@ -170,11 +268,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/expenses': {
+      id: '/expenses'
+      path: '/expenses'
+      fullPath: '/expenses'
+      preLoaderRoute: typeof ExpensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inventory': {
+      id: '/inventory'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof InventoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packages': {
+      id: '/packages'
+      path: '/packages'
+      fullPath: '/packages'
+      preLoaderRoute: typeof PackagesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pos': {
@@ -191,6 +310,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof QueueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -205,6 +331,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shifts': {
+      id: '/shifts'
+      path: '/shifts'
+      fullPath: '/shifts'
+      preLoaderRoute: typeof ShiftsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vehicles': {
       id: '/vehicles'
       path: '/vehicles'
@@ -212,19 +345,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VehiclesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workers': {
+      id: '/workers'
+      path: '/workers'
+      fullPath: '/workers'
+      preLoaderRoute: typeof WorkersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BookingsRoute: BookingsRoute,
   CheckinRoute: CheckinRoute,
   CustomersRoute: CustomersRoute,
+  ExpensesRoute: ExpensesRoute,
+  InventoryRoute: InventoryRoute,
   LoginRoute: LoginRoute,
+  PackagesRoute: PackagesRoute,
   PosRoute: PosRoute,
   QueueRoute: QueueRoute,
+  ReportsRoute: ReportsRoute,
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
+  ShiftsRoute: ShiftsRoute,
   VehiclesRoute: VehiclesRoute,
+  WorkersRoute: WorkersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

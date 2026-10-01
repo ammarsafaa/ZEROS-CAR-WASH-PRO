@@ -48,6 +48,10 @@ function PosPage() {
 
   const pay = () => {
     if (!order) return;
+    if (!db.shifts.some((x) => !x.closedAt)) {
+      alert("لا توجد وردية مفتوحة. افتح وردية من صفحة الورديات والصندوق أولاً.");
+      return;
+    }
     const inv: Invoice = {
       id: newId(),
       code: nextCode(db, "INV", true),

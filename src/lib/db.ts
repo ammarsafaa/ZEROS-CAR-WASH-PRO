@@ -74,7 +74,7 @@ export interface Order {
   status: OrderStatus;
   createdAt: string;
   history: { status: OrderStatus; at: string }[];
-  workerId?: string;
+  workerId?: string | undefined;
 }
 
 export interface Invoice {
@@ -118,7 +118,26 @@ export interface DB {
   settings: Settings;
   counters: Record<string, number>;
   audit: AuditEntry[];
+  workers: Worker[];
+  shifts: Shift[];
+  expenses: Expense[];
+  items: StockItem[];
+  suppliers: Supplier[];
+  purchases: Purchase[];
+  packages: Package[];
+  subscriptions: Subscription[];
+  bookings: Booking[];
 }
+
+export interface Worker { id: string; code: string; name: string; phone: string; job: string; salary: number; commissionPct: number; active: boolean; createdAt: string; }
+export interface Shift { id: string; code: string; user: string; openedAt: string; openingCash: number; closedAt?: string; countedCash?: number; expectedCash?: number; notes?: string; }
+export interface Expense { id: string; code: string; category: string; amount: number; method: string; note: string; date: string; user: string; }
+export interface StockItem { id: string; code: string; name: string; unit: string; qty: number; minQty: number; cost: number; }
+export interface Supplier { id: string; code: string; name: string; phone: string; address: string; balance: number; }
+export interface Purchase { id: string; code: string; supplierId: string; lines: { itemId: string; qty: number; cost: number }[]; total: number; paid: number; date: string; user: string; }
+export interface Package { id: string; name: string; price: number; washes: number; days: number; serviceIds: string[]; active: boolean; }
+export interface Subscription { id: string; code: string; customerId: string; vehicleId?: string | undefined; packageId: string; remaining: number; startAt: string; endAt: string; usage: string[]; }
+export interface Booking { id: string; code: string; customerName: string; phone: string; vehicle: string; serviceIds: string[]; date: string; status: "PENDING" | "CONFIRMED" | "DONE" | "CANCELLED"; notes: string; }
 
 const KEY = "cwp_db_v1";
 
@@ -140,7 +159,8 @@ function uid(): string {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
 
-function seed(): DB {
+const ARRAYS = ["workers","shifts","expenses","items","suppliers","purchases","packages","subscriptions","bookings"] as const;
+function seed(): Omit<DB, (typeof ARRAYS)[number]> {
   const now = new Date().toISOString();
   const services: Service[] = [
     ["غسيل خارجي", "Exterior Wash", "غسيل", 10000, 3000, 20, 1000],
@@ -200,12 +220,17 @@ function seed(): DB {
 export function getDB(): DB {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw) return JSON.parse(raw) as DB;
+    if (raw) return migrate(JSON.parse(raw) as DB);
   } catch {
     /* corrupted -> reseed */
   }
-  const db = seed();
+  const db = migrate(seed() as DB);
   localStorage.setItem(KEY, JSON.stringify(db));
+  return db;
+}
+
+function migrate(db: DB): DB {
+  for (const k of ARRAYS) if (!Array.isArray((db as any)[k])) (db as any)[k] = [];
   return db;
 }
 
@@ -314,4 +339,23 @@ export function getTheme(): "dark" | "light" {
 export function setTheme(t: "dark" | "light"): void {
   localStorage.setItem(THEME_KEY, t);
   document.documentElement.classList.toggle("dark", t === "dark");
+}
+
+export function inRange(iso: string, from: string, to: string): boolean {
+  const d = iso.slice(0, 10);
+  return d >= from && d <= to;
+}
+export function todayStr(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+export function openShift(db: DB): Shift | undefined {
+  return db.shifts.find((s) => !s.closedAt);
+}
+/** commission earned by a worker on an order: service commission, split equally if no pct; plus pct of total */
+export function orderCommission(db: DB, o: Order): number {
+  const w = db.workers.find((x) => x.id === o.workerId);
+  if (!w) return 0;
+  const fixed = o.items.reduce((a, it) => a + (db.services.find((s) => s.id === it.serviceId)?.commission ?? 0), 0);
+  return fixed + Math.round((o.total * (w.commissionPct || 0)) / 100);
 }

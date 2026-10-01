@@ -13,6 +13,13 @@ import {
   Sun,
   Languages,
   CarFront,
+  HardHat,
+  Wallet,
+  TrendingDown,
+  Boxes,
+  Ticket,
+  CalendarClock,
+  BarChart3,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -33,6 +40,13 @@ const NAV = [
   { to: "/customers", ar: "العملاء", en: "Customers", icon: Users },
   { to: "/vehicles", ar: "السيارات", en: "Vehicles", icon: Car },
   { to: "/services", ar: "الخدمات", en: "Services", icon: Sparkles },
+  { to: "/bookings", ar: "الحجوزات", en: "Bookings", icon: CalendarClock },
+  { to: "/workers", ar: "العمال والعمولات", en: "Workers", icon: HardHat },
+  { to: "/shifts", ar: "الورديات والصندوق", en: "Shifts & Cash", icon: Wallet },
+  { to: "/expenses", ar: "المصروفات", en: "Expenses", icon: TrendingDown },
+  { to: "/inventory", ar: "المخزون والمشتريات", en: "Inventory", icon: Boxes },
+  { to: "/packages", ar: "الاشتراكات والباقات", en: "Packages", icon: Ticket },
+  { to: "/reports", ar: "التقارير", en: "Reports", icon: BarChart3 },
   { to: "/settings", ar: "الإعدادات", en: "Settings", icon: SettingsIcon },
 ] as const;
 
