@@ -14,7 +14,9 @@ import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as CouponsRouteImport } from './routes/coupons'
 import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as DaycloseRouteImport } from './routes/dayclose'
 import { Route as ExpensesRouteImport } from './routes/expenses'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LoyaltyRouteImport } from './routes/loyalty'
@@ -27,6 +29,7 @@ import { Route as SalesRouteImport } from './routes/sales'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ShiftsRouteImport } from './routes/shifts'
+import { Route as SystemRouteImport } from './routes/system'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
 import { Route as WorkersRouteImport } from './routes/workers'
 
@@ -55,9 +58,19 @@ const CustomersRoute = CustomersRouteImport.update({
   path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DaycloseRoute = DaycloseRouteImport.update({
+  id: '/dayclose',
+  path: '/dayclose',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExpensesRoute = ExpensesRouteImport.update({
   id: '/expenses',
   path: '/expenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InventoryRoute = InventoryRouteImport.update({
@@ -120,6 +133,11 @@ const ShiftsRoute = ShiftsRouteImport.update({
   path: '/shifts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemRoute = SystemRouteImport.update({
+  id: '/system',
+  path: '/system',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VehiclesRoute = VehiclesRouteImport.update({
   id: '/vehicles',
   path: '/vehicles',
@@ -137,7 +155,9 @@ export interface FileRoutesByFullPath {
   '/checkin': typeof CheckinRoute
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
+  '/dayclose': typeof DaycloseRoute
   '/expenses': typeof ExpensesRoute
+  '/history': typeof HistoryRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
@@ -150,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
+  '/system': typeof SystemRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -159,7 +180,9 @@ export interface FileRoutesByTo {
   '/checkin': typeof CheckinRoute
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
+  '/dayclose': typeof DaycloseRoute
   '/expenses': typeof ExpensesRoute
+  '/history': typeof HistoryRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
@@ -172,6 +195,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
+  '/system': typeof SystemRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -182,7 +206,9 @@ export interface FileRoutesById {
   '/checkin': typeof CheckinRoute
   '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
+  '/dayclose': typeof DaycloseRoute
   '/expenses': typeof ExpensesRoute
+  '/history': typeof HistoryRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
   '/loyalty': typeof LoyaltyRoute
@@ -195,6 +221,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
+  '/system': typeof SystemRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -206,7 +233,9 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/coupons'
     | '/customers'
+    | '/dayclose'
     | '/expenses'
+    | '/history'
     | '/inventory'
     | '/login'
     | '/loyalty'
@@ -219,6 +248,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/settings'
     | '/shifts'
+    | '/system'
     | '/vehicles'
     | '/workers'
   fileRoutesByTo: FileRoutesByTo
@@ -228,7 +258,9 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/coupons'
     | '/customers'
+    | '/dayclose'
     | '/expenses'
+    | '/history'
     | '/inventory'
     | '/login'
     | '/loyalty'
@@ -241,6 +273,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/settings'
     | '/shifts'
+    | '/system'
     | '/vehicles'
     | '/workers'
   id:
@@ -250,7 +283,9 @@ export interface FileRouteTypes {
     | '/checkin'
     | '/coupons'
     | '/customers'
+    | '/dayclose'
     | '/expenses'
+    | '/history'
     | '/inventory'
     | '/login'
     | '/loyalty'
@@ -263,6 +298,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/settings'
     | '/shifts'
+    | '/system'
     | '/vehicles'
     | '/workers'
   fileRoutesById: FileRoutesById
@@ -273,7 +309,9 @@ export interface RootRouteChildren {
   CheckinRoute: typeof CheckinRoute
   CouponsRoute: typeof CouponsRoute
   CustomersRoute: typeof CustomersRoute
+  DaycloseRoute: typeof DaycloseRoute
   ExpensesRoute: typeof ExpensesRoute
+  HistoryRoute: typeof HistoryRoute
   InventoryRoute: typeof InventoryRoute
   LoginRoute: typeof LoginRoute
   LoyaltyRoute: typeof LoyaltyRoute
@@ -286,6 +324,7 @@ export interface RootRouteChildren {
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
   ShiftsRoute: typeof ShiftsRoute
+  SystemRoute: typeof SystemRoute
   VehiclesRoute: typeof VehiclesRoute
   WorkersRoute: typeof WorkersRoute
 }
@@ -327,11 +366,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dayclose': {
+      id: '/dayclose'
+      path: '/dayclose'
+      fullPath: '/dayclose'
+      preLoaderRoute: typeof DaycloseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/expenses': {
       id: '/expenses'
       path: '/expenses'
       fullPath: '/expenses'
       preLoaderRoute: typeof ExpensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -418,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShiftsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/system': {
+      id: '/system'
+      path: '/system'
+      fullPath: '/system'
+      preLoaderRoute: typeof SystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vehicles': {
       id: '/vehicles'
       path: '/vehicles'
@@ -441,7 +501,9 @@ const rootRouteChildren: RootRouteChildren = {
   CheckinRoute: CheckinRoute,
   CouponsRoute: CouponsRoute,
   CustomersRoute: CustomersRoute,
+  DaycloseRoute: DaycloseRoute,
   ExpensesRoute: ExpensesRoute,
+  HistoryRoute: HistoryRoute,
   InventoryRoute: InventoryRoute,
   LoginRoute: LoginRoute,
   LoyaltyRoute: LoyaltyRoute,
@@ -454,6 +516,7 @@ const rootRouteChildren: RootRouteChildren = {
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
   ShiftsRoute: ShiftsRoute,
+  SystemRoute: SystemRoute,
   VehiclesRoute: VehiclesRoute,
   WorkersRoute: WorkersRoute,
 }
