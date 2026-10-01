@@ -9,7 +9,7 @@ export const Route = createFileRoute("/queue")({
   beforeLoad: () => requireAuth(),
   head: () => ({
     meta: [
-      { title: "طابور السيارات — CAR WASH PRO" },
+      { title: "طابور السيارات — ZEROS CAR WASH PRO" },
       { name: "description", content: "متابعة حالات السيارات: انتظار، غسيل، فحص، جاهز" },
     ],
   }),

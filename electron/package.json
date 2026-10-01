@@ -1,18 +1,18 @@
 {
   "name": "car-wash-pro",
-  "productName": "CAR WASH PRO",
+  "productName": "ZEROS CAR WASH PRO",
   "version": "1.0.0",
   "main": "electron/main.cjs",
-  "description": "CAR WASH PRO",
-  "author": "CAR WASH PRO",
+  "description": "ZEROS CAR WASH PRO",
+  "author": "ZEROS CAR WASH PRO",
   "build": {
-    "appId": "com.carwashpro.app",
-    "productName": "CAR WASH PRO",
+    "appId": "com.zeroscarwashpro.app",
+    "productName": "ZEROS CAR WASH PRO",
     "files": ["electron/**"],
     "extraResources": [{ "from": "dist/client", "to": "app", "filter": ["**/*"] }],
     "win": {
       "target": [{ "target": "nsis", "arch": ["x64"] }],
-      "artifactName": "CAR-WASH-PRO-Setup-${version}.${ext}",
+      "artifactName": "ZEROS-CAR-WASH-PRO-Setup-${version}.${ext}",
       "icon": "electron/icon.ico"
     },
     "nsis": {
@@ -20,13 +20,13 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "CAR WASH PRO",
+      "shortcutName": "ZEROS CAR WASH PRO",
       "language": "1025",
       "installerIcon": "electron/icon.ico",
       "uninstallerIcon": "electron/icon.ico"
     },
     "directories": { "output": "release" },
-    "publish": [{ "provider": "github", "owner": "ammarsafaa", "repo": "CAR-WASH-PRO" }]
+    "publish": [{ "provider": "github", "owner": "ammarsafaa", "repo": "ZEROS-CAR-WASH-PRO" }]
   },
   "dependencies": {
     "electron-updater": "6.3.9"

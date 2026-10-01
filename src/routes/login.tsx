@@ -6,7 +6,7 @@ import { login, getSession, getLang, setLang, getTheme, setTheme } from "@/lib/d
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "تسجيل الدخول — CAR WASH PRO" },
+      { title: "تسجيل الدخول — ZEROS CAR WASH PRO" },
       { name: "description", content: "تسجيل الدخول إلى نظام إدارة مغسلة السيارات" },
     ],
   }),
@@ -58,7 +58,7 @@ function LoginPage() {
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
             <CarFront className="h-9 w-9" />
           </div>
-          <h1 className="text-2xl font-bold">CAR WASH PRO</h1>
+          <h1 className="text-2xl font-bold">ZEROS CAR WASH PRO</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {lang === "ar" ? "نظام إدارة مغسلة السيارات" : "Car Wash Management System"}
           </p>

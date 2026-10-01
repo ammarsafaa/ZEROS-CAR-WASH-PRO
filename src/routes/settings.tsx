@@ -9,7 +9,7 @@ export const Route = createFileRoute("/settings")({
   beforeLoad: () => requireAuth(),
   head: () => ({
     meta: [
-      { title: "الإعدادات — CAR WASH PRO" },
+      { title: "الإعدادات — ZEROS CAR WASH PRO" },
       { name: "description", content: "إعدادات المغسلة والضريبة والنسخ الاحتياطي وسجل العمليات" },
     ],
   }),

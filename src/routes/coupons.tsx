@@ -8,7 +8,7 @@ import { useDB, Modal, Field, Table, inputCls, btnPrimary, btnGhost, btnDanger, 
 
 export const Route = createFileRoute("/coupons")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "الكوبونات — CAR WASH PRO" }, { name: "description", content: "إنشاء كوبونات الخصم ومتابعة استخدامها" }] }),
+  head: () => ({ meta: [{ title: "الكوبونات — ZEROS CAR WASH PRO" }, { name: "description", content: "إنشاء كوبونات الخصم ومتابعة استخدامها" }] }),
   component: CouponsPage,
 });
 

@@ -8,7 +8,7 @@ import { useDB, Modal, Field, Table, Tabs, inputCls, btnPrimary, btnGhost, btnDa
 
 export const Route = createFileRoute("/inventory")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "المخزون والمشتريات — CAR WASH PRO" }, { name: "description", content: "المواد والموردون وفواتير الشراء" }] }),
+  head: () => ({ meta: [{ title: "المخزون والمشتريات — ZEROS CAR WASH PRO" }, { name: "description", content: "المواد والموردون وفواتير الشراء" }] }),
   component: InventoryPage,
 });
 

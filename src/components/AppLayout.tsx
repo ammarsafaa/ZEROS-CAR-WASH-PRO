@@ -120,7 +120,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
             <CarFront className="h-6 w-6" />
           </div>
           <div>
-            <div className="text-sm font-bold leading-tight">CAR WASH PRO</div>
+            <div className="text-sm font-bold leading-tight">ZEROS CAR WASH PRO</div>
             <div className="text-xs opacity-60">
               {lang === "ar" ? "نظام إدارة المغسلة" : "Car Wash Manager"}
             </div>

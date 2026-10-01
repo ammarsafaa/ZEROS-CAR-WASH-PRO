@@ -8,7 +8,7 @@ import { useDB, Modal, Field, Table, DateRange, Stat, inputCls, btnPrimary, btnD
 
 export const Route = createFileRoute("/expenses")({
   beforeLoad: () => requireAuth(),
-  head: () => ({ meta: [{ title: "المصروفات — CAR WASH PRO" }, { name: "description", content: "تسجيل ومتابعة مصروفات المغسلة" }] }),
+  head: () => ({ meta: [{ title: "المصروفات — ZEROS CAR WASH PRO" }, { name: "description", content: "تسجيل ومتابعة مصروفات المغسلة" }] }),
   component: ExpensesPage,
 });
 

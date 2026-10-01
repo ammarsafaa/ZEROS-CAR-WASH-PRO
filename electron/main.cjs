@@ -1,4 +1,4 @@
-// CAR WASH PRO — Electron desktop shell. Serves the bundled app from disk over a
+// ZEROS CAR WASH PRO — Electron desktop shell. Serves the bundled app from disk over a
 // private app:// scheme (stable origin => local data persists). Fully offline;
 // internet is only used when the user checks for an update.
 const { app, BrowserWindow, protocol, net, Menu, shell, ipcMain } = require("electron");
@@ -19,7 +19,7 @@ let mainWin = null;
 function createWindow() {
   const win = new BrowserWindow({
     width: 1366, height: 820, minWidth: 1024, minHeight: 640,
-    title: "CAR WASH PRO", backgroundColor: "#0b1220", autoHideMenuBar: true,
+    title: "ZEROS CAR WASH PRO", backgroundColor: "#0b1220", autoHideMenuBar: true,
     icon: path.join(__dirname, "icon.ico"),
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: false, preload: path.join(__dirname, "preload.cjs") },
   });
