@@ -124,6 +124,8 @@ function SettingsPage() {
           </div>
         </div>
 
+        <UpdatePanel />
+
         <div className="rounded-xl border border-border bg-card lg:col-span-2">
           <h2 className="border-b border-border p-4 font-bold">سجل العمليات (Audit Log)</h2>
           <div className="max-h-80 overflow-y-auto">
