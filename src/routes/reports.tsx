@@ -32,6 +32,7 @@ function ReportsPage() {
 
   const svc = new Map<string, { n: number; v: number }>();
   orders.forEach((o) => o.items.forEach((it) => { const r = svc.get(it.name) ?? { n: 0, v: 0 }; r.n++; r.v += it.price; svc.set(it.name, r); }));
+  inv.forEach((i) => i.lines?.forEach((l) => { const r = svc.get(l.name) ?? { n: 0, v: 0 }; r.n += l.qty; r.v += l.qty * l.price; svc.set(l.name, r); }));
   const byDay = new Map<string, number>();
   inv.forEach((i) => byDay.set(i.createdAt.slice(0, 10), (byDay.get(i.createdAt.slice(0, 10)) ?? 0) + i.total));
   const maxDay = Math.max(1, ...byDay.values());
@@ -67,7 +68,7 @@ function ReportsPage() {
           </Table>
         </div>
         <div>
-          <h3 className="mb-2 font-bold">الخدمات</h3>
+          <h3 className="mb-2 font-bold">الخدمات والمنتجات المباعة</h3>
           <Table head={["الخدمة", "العدد", "القيمة"]} empty={!svc.size}>
             {[...svc.entries()].sort((a, b) => b[1].v - a[1].v).map(([k, r]) => <tr key={k}><td className={td}>{k}</td><td className={td}>{r.n}</td><td className={td + " font-bold"}>{fmt(r.v)}</td></tr>)}
           </Table>

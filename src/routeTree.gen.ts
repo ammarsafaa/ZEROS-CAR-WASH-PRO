@@ -12,17 +12,24 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as CheckinRouteImport } from './routes/checkin'
+import { Route as CouponsRouteImport } from './routes/coupons'
 import { Route as CustomersRouteImport } from './routes/customers'
+import { Route as DaycloseRouteImport } from './routes/dayclose'
 import { Route as ExpensesRouteImport } from './routes/expenses'
+import { Route as HistoryRouteImport } from './routes/history'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LoyaltyRouteImport } from './routes/loyalty'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as PosRouteImport } from './routes/pos'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as QueueRouteImport } from './routes/queue'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SalesRouteImport } from './routes/sales'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ShiftsRouteImport } from './routes/shifts'
+import { Route as SystemRouteImport } from './routes/system'
 import { Route as VehiclesRouteImport } from './routes/vehicles'
 import { Route as WorkersRouteImport } from './routes/workers'
 
@@ -41,14 +48,29 @@ const CheckinRoute = CheckinRouteImport.update({
   path: '/checkin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CouponsRoute = CouponsRouteImport.update({
+  id: '/coupons',
+  path: '/coupons',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CustomersRoute = CustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DaycloseRoute = DaycloseRouteImport.update({
+  id: '/dayclose',
+  path: '/dayclose',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExpensesRoute = ExpensesRouteImport.update({
   id: '/expenses',
   path: '/expenses',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InventoryRoute = InventoryRouteImport.update({
@@ -61,6 +83,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoyaltyRoute = LoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PackagesRoute = PackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -71,6 +98,11 @@ const PosRoute = PosRouteImport.update({
   path: '/pos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QueueRoute = QueueRouteImport.update({
   id: '/queue',
   path: '/queue',
@@ -79,6 +111,11 @@ const QueueRoute = QueueRouteImport.update({
 const ReportsRoute = ReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesRoute = SalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -96,6 +133,11 @@ const ShiftsRoute = ShiftsRouteImport.update({
   path: '/shifts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SystemRoute = SystemRouteImport.update({
+  id: '/system',
+  path: '/system',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VehiclesRoute = VehiclesRouteImport.update({
   id: '/vehicles',
   path: '/vehicles',
@@ -111,17 +153,24 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
+  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
+  '/dayclose': typeof DaycloseRoute
   '/expenses': typeof ExpensesRoute
+  '/history': typeof HistoryRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/loyalty': typeof LoyaltyRoute
   '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
+  '/sales': typeof SalesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
+  '/system': typeof SystemRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -129,17 +178,24 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
+  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
+  '/dayclose': typeof DaycloseRoute
   '/expenses': typeof ExpensesRoute
+  '/history': typeof HistoryRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/loyalty': typeof LoyaltyRoute
   '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
+  '/sales': typeof SalesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
+  '/system': typeof SystemRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -148,17 +204,24 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
+  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
+  '/dayclose': typeof DaycloseRoute
   '/expenses': typeof ExpensesRoute
+  '/history': typeof HistoryRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/loyalty': typeof LoyaltyRoute
   '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
+  '/sales': typeof SalesRoute
   '/services': typeof ServicesRoute
   '/settings': typeof SettingsRoute
   '/shifts': typeof ShiftsRoute
+  '/system': typeof SystemRoute
   '/vehicles': typeof VehiclesRoute
   '/workers': typeof WorkersRoute
 }
@@ -168,17 +231,24 @@ export interface FileRouteTypes {
     | '/'
     | '/bookings'
     | '/checkin'
+    | '/coupons'
     | '/customers'
+    | '/dayclose'
     | '/expenses'
+    | '/history'
     | '/inventory'
     | '/login'
+    | '/loyalty'
     | '/packages'
     | '/pos'
+    | '/products'
     | '/queue'
     | '/reports'
+    | '/sales'
     | '/services'
     | '/settings'
     | '/shifts'
+    | '/system'
     | '/vehicles'
     | '/workers'
   fileRoutesByTo: FileRoutesByTo
@@ -186,17 +256,24 @@ export interface FileRouteTypes {
     | '/'
     | '/bookings'
     | '/checkin'
+    | '/coupons'
     | '/customers'
+    | '/dayclose'
     | '/expenses'
+    | '/history'
     | '/inventory'
     | '/login'
+    | '/loyalty'
     | '/packages'
     | '/pos'
+    | '/products'
     | '/queue'
     | '/reports'
+    | '/sales'
     | '/services'
     | '/settings'
     | '/shifts'
+    | '/system'
     | '/vehicles'
     | '/workers'
   id:
@@ -204,17 +281,24 @@ export interface FileRouteTypes {
     | '/'
     | '/bookings'
     | '/checkin'
+    | '/coupons'
     | '/customers'
+    | '/dayclose'
     | '/expenses'
+    | '/history'
     | '/inventory'
     | '/login'
+    | '/loyalty'
     | '/packages'
     | '/pos'
+    | '/products'
     | '/queue'
     | '/reports'
+    | '/sales'
     | '/services'
     | '/settings'
     | '/shifts'
+    | '/system'
     | '/vehicles'
     | '/workers'
   fileRoutesById: FileRoutesById
@@ -223,17 +307,24 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookingsRoute: typeof BookingsRoute
   CheckinRoute: typeof CheckinRoute
+  CouponsRoute: typeof CouponsRoute
   CustomersRoute: typeof CustomersRoute
+  DaycloseRoute: typeof DaycloseRoute
   ExpensesRoute: typeof ExpensesRoute
+  HistoryRoute: typeof HistoryRoute
   InventoryRoute: typeof InventoryRoute
   LoginRoute: typeof LoginRoute
+  LoyaltyRoute: typeof LoyaltyRoute
   PackagesRoute: typeof PackagesRoute
   PosRoute: typeof PosRoute
+  ProductsRoute: typeof ProductsRoute
   QueueRoute: typeof QueueRoute
   ReportsRoute: typeof ReportsRoute
+  SalesRoute: typeof SalesRoute
   ServicesRoute: typeof ServicesRoute
   SettingsRoute: typeof SettingsRoute
   ShiftsRoute: typeof ShiftsRoute
+  SystemRoute: typeof SystemRoute
   VehiclesRoute: typeof VehiclesRoute
   WorkersRoute: typeof WorkersRoute
 }
@@ -261,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/coupons': {
+      id: '/coupons'
+      path: '/coupons'
+      fullPath: '/coupons'
+      preLoaderRoute: typeof CouponsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/customers': {
       id: '/customers'
       path: '/customers'
@@ -268,11 +366,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CustomersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dayclose': {
+      id: '/dayclose'
+      path: '/dayclose'
+      fullPath: '/dayclose'
+      preLoaderRoute: typeof DaycloseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/expenses': {
       id: '/expenses'
       path: '/expenses'
       fullPath: '/expenses'
       preLoaderRoute: typeof ExpensesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inventory': {
@@ -289,6 +401,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/loyalty': {
+      id: '/loyalty'
+      path: '/loyalty'
+      fullPath: '/loyalty'
+      preLoaderRoute: typeof LoyaltyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/packages': {
       id: '/packages'
       path: '/packages'
@@ -303,6 +422,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/queue': {
       id: '/queue'
       path: '/queue'
@@ -315,6 +441,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales': {
+      id: '/sales'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof SalesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -338,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ShiftsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/system': {
+      id: '/system'
+      path: '/system'
+      fullPath: '/system'
+      preLoaderRoute: typeof SystemRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vehicles': {
       id: '/vehicles'
       path: '/vehicles'
@@ -359,17 +499,24 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookingsRoute: BookingsRoute,
   CheckinRoute: CheckinRoute,
+  CouponsRoute: CouponsRoute,
   CustomersRoute: CustomersRoute,
+  DaycloseRoute: DaycloseRoute,
   ExpensesRoute: ExpensesRoute,
+  HistoryRoute: HistoryRoute,
   InventoryRoute: InventoryRoute,
   LoginRoute: LoginRoute,
+  LoyaltyRoute: LoyaltyRoute,
   PackagesRoute: PackagesRoute,
   PosRoute: PosRoute,
+  ProductsRoute: ProductsRoute,
   QueueRoute: QueueRoute,
   ReportsRoute: ReportsRoute,
+  SalesRoute: SalesRoute,
   ServicesRoute: ServicesRoute,
   SettingsRoute: SettingsRoute,
   ShiftsRoute: ShiftsRoute,
+  SystemRoute: SystemRoute,
   VehiclesRoute: VehiclesRoute,
   WorkersRoute: WorkersRoute,
 }

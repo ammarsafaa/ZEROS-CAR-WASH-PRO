@@ -16,7 +16,8 @@ function shiftTotals(db: DB, s: Shift) {
   const inv = db.invoices.filter((i) => !i.voided && i.createdAt >= s.openedAt && i.createdAt <= end);
   const by = (m: string) => inv.filter((i) => i.method.toLowerCase() === m).reduce((a, i) => a + i.total, 0);
   const exp = db.expenses.filter((e) => e.method === "cash" && e.date >= s.openedAt && e.date <= end).reduce((a, e) => a + e.amount, 0);
-  const cash = by("cash");
+  const collected = db.invoices.filter((i) => i.code.startsWith("PAY-") && i.createdAt >= s.openedAt && i.createdAt <= end).reduce((a, i) => a + (i.paid ?? 0), 0);
+  const cash = by("cash") + collected;
   return { count: inv.length, cash, card: by("card"), credit: by("credit"), other: by("other"), exp, expected: s.openingCash + cash - exp };
 }
 

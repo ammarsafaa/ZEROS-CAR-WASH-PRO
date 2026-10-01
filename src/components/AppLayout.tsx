@@ -20,6 +20,13 @@ import {
   Ticket,
   CalendarClock,
   BarChart3,
+  ShoppingCart,
+  Droplets,
+  TicketPercent,
+  Star,
+  History,
+  CalendarCheck,
+  ShieldCheck,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -29,24 +36,34 @@ import {
   setTheme,
   getSession,
   logout,
+  autoBackupIfDue,
+  getLicense,
+  trialDaysLeft,
   type Lang,
 } from "@/lib/db";
 
 const NAV = [
   { to: "/", ar: "لوحة التحكم", en: "Dashboard", icon: LayoutDashboard },
+  { to: "/sales", ar: "شاشة المبيعات", en: "Sales POS", icon: ShoppingCart },
   { to: "/checkin", ar: "استقبال سيارة", en: "Check-In", icon: CheckInIcon },
   { to: "/queue", ar: "طابور السيارات", en: "Queue", icon: ListOrdered },
   { to: "/pos", ar: "الكاشير والفواتير", en: "Cashier / POS", icon: Receipt },
   { to: "/customers", ar: "العملاء", en: "Customers", icon: Users },
   { to: "/vehicles", ar: "السيارات", en: "Vehicles", icon: Car },
   { to: "/services", ar: "الخدمات", en: "Services", icon: Sparkles },
+  { to: "/history", ar: "سجل السيارات", en: "Vehicle History", icon: History },
+  { to: "/products", ar: "الزيوت وقطع الغيار", en: "Oils & Parts", icon: Droplets },
   { to: "/bookings", ar: "الحجوزات", en: "Bookings", icon: CalendarClock },
   { to: "/workers", ar: "العمال والعمولات", en: "Workers", icon: HardHat },
   { to: "/shifts", ar: "الورديات والصندوق", en: "Shifts & Cash", icon: Wallet },
   { to: "/expenses", ar: "المصروفات", en: "Expenses", icon: TrendingDown },
   { to: "/inventory", ar: "المخزون والمشتريات", en: "Inventory", icon: Boxes },
   { to: "/packages", ar: "الاشتراكات والباقات", en: "Packages", icon: Ticket },
+  { to: "/coupons", ar: "الكوبونات", en: "Coupons", icon: TicketPercent },
+  { to: "/loyalty", ar: "برنامج الولاء", en: "Loyalty", icon: Star },
   { to: "/reports", ar: "التقارير", en: "Reports", icon: BarChart3 },
+  { to: "/dayclose", ar: "إغلاق اليوم", en: "Day Close", icon: CalendarCheck },
+  { to: "/system", ar: "النسخ والترخيص", en: "Backup & License", icon: ShieldCheck },
   { to: "/settings", ar: "الإعدادات", en: "Settings", icon: SettingsIcon },
 ] as const;
 
@@ -71,6 +88,11 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
   const [lang, toggleLang] = useLang();
   const [theme, setT] = useState<"dark" | "light">("dark");
   const session = getSession();
+
+  useEffect(() => {
+    autoBackupIfDue();
+    if (!getLicense() && trialDaysLeft() <= 0 && pathname !== "/system") navigate({ to: "/system" });
+  }, [pathname, navigate]);
 
   useEffect(() => {
     const t = getTheme();
@@ -138,7 +160,7 @@ export function AppLayout({ children, title }: { children: ReactNode; title: str
       </aside>
 
       {/* Main */}
-      <div className="ms-60 flex min-h-screen flex-1 flex-col">
+      <div className="ms-60 flex min-h-screen min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex items-center justify-between border-b border-border bg-card/80 px-6 py-3 backdrop-blur">
           <h1 className="text-lg font-bold">{title}</h1>
           <div className="flex items-center gap-2">

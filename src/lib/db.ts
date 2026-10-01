@@ -90,7 +90,14 @@ export interface Invoice {
   createdAt: string;
   voided?: boolean;
   voidReason?: string;
+  lines?: InvoiceLine[] | undefined;
+  customerId?: string | undefined;
+  vehicleId?: string | undefined;
+  couponCode?: string | undefined;
+  pointsUsed?: number | undefined;
+  paid?: number | undefined;
 }
+export interface InvoiceLine { kind: "service" | "product"; refId: string; name: string; qty: number; price: number; }
 
 export interface Settings {
   businessName: string;
@@ -99,6 +106,11 @@ export interface Settings {
   currency: string;
   taxEnabled: boolean;
   taxRate: number;
+  pointsPer1000?: number;
+  pointValue?: number;
+  oilIntervalKm?: number;
+  autoBackup?: boolean;
+  lastBackupAt?: string;
 }
 
 export interface AuditEntry {
@@ -127,12 +139,18 @@ export interface DB {
   packages: Package[];
   subscriptions: Subscription[];
   bookings: Booking[];
+  coupons: Coupon[];
+  oilChanges: OilChange[];
+  dayCloses: DayClose[];
 }
 
 export interface Worker { id: string; code: string; name: string; phone: string; job: string; salary: number; commissionPct: number; active: boolean; createdAt: string; }
 export interface Shift { id: string; code: string; user: string; openedAt: string; openingCash: number; closedAt?: string; countedCash?: number; expectedCash?: number; notes?: string; }
 export interface Expense { id: string; code: string; category: string; amount: number; method: string; note: string; date: string; user: string; }
-export interface StockItem { id: string; code: string; name: string; unit: string; qty: number; minQty: number; cost: number; }
+export interface StockItem { id: string; code: string; name: string; unit: string; qty: number; minQty: number; cost: number; sellPrice?: number; barcode?: string; category?: string; sellable?: boolean; }
+export interface Coupon { id: string; code: string; type: "pct" | "amount"; value: number; minTotal: number; maxUses: number; used: number; expiresAt: string; active: boolean; }
+export interface OilChange { id: string; vehicleId: string; invoiceCode: string; date: string; km: number; nextKm: number; products: string; }
+export interface DayClose { id: string; date: string; user: string; sales: number; invoices: number; expenses: number; cash: number; at: string; }
 export interface Supplier { id: string; code: string; name: string; phone: string; address: string; balance: number; }
 export interface Purchase { id: string; code: string; supplierId: string; lines: { itemId: string; qty: number; cost: number }[]; total: number; paid: number; date: string; user: string; }
 export interface Package { id: string; name: string; price: number; washes: number; days: number; serviceIds: string[]; active: boolean; }
@@ -159,7 +177,7 @@ function uid(): string {
   return Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
 }
 
-const ARRAYS = ["workers","shifts","expenses","items","suppliers","purchases","packages","subscriptions","bookings"] as const;
+const ARRAYS = ["workers","shifts","expenses","items","suppliers","purchases","packages","subscriptions","bookings","coupons","oilChanges","dayCloses"] as const;
 function seed(): Omit<DB, (typeof ARRAYS)[number]> {
   const now = new Date().toISOString();
   const services: Service[] = [
@@ -358,4 +376,67 @@ export function orderCommission(db: DB, o: Order): number {
   if (!w) return 0;
   const fixed = o.items.reduce((a, it) => a + (db.services.find((s) => s.id === it.serviceId)?.commission ?? 0), 0);
   return fixed + Math.round((o.total * (w.commissionPct || 0)) / 100);
+}
+
+export const PRODUCT_CATS = ["زيوت محرك", "فلاتر", "قطع غيار", "إطارات وبطاريات", "مواد تنظيف", "إكسسوارات", "مواد استهلاكية"];
+export const OIL_CATS = ["زيوت محرك", "فلاتر"];
+
+// ---- automatic local backups (kept on this device, last 7) ----
+const BK_KEY = "cwp_auto_backups";
+export function listBackups(): { at: string; size: number }[] {
+  try { return (JSON.parse(localStorage.getItem(BK_KEY) || "[]") as { at: string; data: string }[]).map((b) => ({ at: b.at, size: b.data.length })); } catch { return []; }
+}
+export function makeAutoBackup(db: DB): void {
+  let arr: { at: string; data: string }[] = [];
+  try { arr = JSON.parse(localStorage.getItem(BK_KEY) || "[]"); } catch { arr = []; }
+  db.settings.lastBackupAt = new Date().toISOString();
+  arr.unshift({ at: db.settings.lastBackupAt, data: JSON.stringify(db) });
+  arr = arr.slice(0, 7);
+  try { localStorage.setItem(BK_KEY, JSON.stringify(arr)); } catch { arr = arr.slice(0, 3); localStorage.setItem(BK_KEY, JSON.stringify(arr)); }
+  saveDB(db);
+}
+export function restoreAutoBackup(at: string): boolean {
+  const arr = JSON.parse(localStorage.getItem(BK_KEY) || "[]") as { at: string; data: string }[];
+  const b = arr.find((x) => x.at === at);
+  if (!b) return false;
+  localStorage.setItem(KEY, b.data);
+  return true;
+}
+/** daily backup on first open of the day */
+export function autoBackupIfDue(): void {
+  const db = getDB();
+  if (db.settings.autoBackup === false) return;
+  if (!db.settings.lastBackupAt || db.settings.lastBackupAt.slice(0, 10) !== new Date().toISOString().slice(0, 10)) makeAutoBackup(db);
+}
+
+// ---- offline license ----
+const LIC_KEY = "cwp_license";
+const MID_KEY = "cwp_machine_id";
+const LIC_SALT = "CWP-OFFLINE-2026";
+export function machineId(): string {
+  let m = localStorage.getItem(MID_KEY);
+  if (!m) {
+    const raw = [navigator.userAgent, screen.width, screen.height, Intl.DateTimeFormat().resolvedOptions().timeZone, Math.random()].join("|");
+    m = hashPassword(raw).slice(0, 12).toUpperCase();
+    localStorage.setItem(MID_KEY, m);
+  }
+  return m;
+}
+export function expectedKey(mid: string): string {
+  const h = hashPassword(LIC_SALT + mid).toUpperCase().padEnd(16, "0").slice(0, 16);
+  return h.match(/.{4}/g)!.join("-");
+}
+export function getLicense(): { key: string; owner: string; at: string } | null {
+  try { const l = JSON.parse(localStorage.getItem(LIC_KEY) || "null"); return l && l.key === expectedKey(machineId()) ? l : null; } catch { return null; }
+}
+export function activateLicense(key: string, owner: string): boolean {
+  if (key.trim().toUpperCase() !== expectedKey(machineId())) return false;
+  localStorage.setItem(LIC_KEY, JSON.stringify({ key: key.trim().toUpperCase(), owner, at: new Date().toISOString() }));
+  return true;
+}
+const FIRST_KEY = "cwp_first_run";
+export function trialDaysLeft(): number {
+  let f = localStorage.getItem(FIRST_KEY);
+  if (!f) { f = new Date().toISOString(); localStorage.setItem(FIRST_KEY, f); }
+  return Math.max(0, 30 - Math.floor((Date.now() - new Date(f).getTime()) / 86400000));
 }

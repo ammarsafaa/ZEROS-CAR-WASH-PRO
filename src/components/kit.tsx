@@ -44,7 +44,7 @@ export function Field({ label, children }: { label: string; children: ReactNode 
   );
 }
 
-export function Stat({ label, value, tone }: { label: string; value: ReactNode; tone?: "good" | "bad" }) {
+export function Stat({ label, value, tone }: { label: string; value: ReactNode; tone?: "good" | "bad" | undefined }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <div className="text-xs text-muted-foreground">{label}</div>
