@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Download, Upload, Save } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
+import { UpdatePanel } from "@/components/UpdatePanel";
 import { requireAuth } from "./index";
 import { getDB, saveDB, logAudit, getSession, hashPassword, type DB } from "@/lib/db";
 
@@ -122,6 +123,8 @@ function SettingsPage() {
             </div>
           </div>
         </div>
+
+        <UpdatePanel />
 
         <div className="rounded-xl border border-border bg-card lg:col-span-2">
           <h2 className="border-b border-border p-4 font-bold">سجل العمليات (Audit Log)</h2>
