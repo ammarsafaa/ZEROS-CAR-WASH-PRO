@@ -12,7 +12,8 @@
     "extraResources": [{ "from": "dist/client", "to": "app", "filter": ["**/*"] }],
     "win": {
       "target": [{ "target": "nsis", "arch": ["x64"] }],
-      "artifactName": "CarWashPro-Setup-${version}.${ext}"
+      "artifactName": "CAR-WASH-PRO-Setup-${version}.${ext}",
+      "icon": "electron/icon.ico"
     },
     "nsis": {
       "oneClick": false,
@@ -20,10 +21,12 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "CAR WASH PRO",
-      "language": "1025"
+      "language": "1025",
+      "installerIcon": "electron/icon.ico",
+      "uninstallerIcon": "electron/icon.ico"
     },
     "directories": { "output": "release" },
-    "publish": [{ "provider": "github", "owner": "ammarsafaa", "repo": "before-you-build" }]
+    "publish": [{ "provider": "github", "owner": "ammarsafaa", "repo": "CAR-WASH-PRO" }]
   },
   "dependencies": {
     "electron-updater": "6.3.9"

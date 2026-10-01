@@ -20,6 +20,7 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1366, height: 820, minWidth: 1024, minHeight: 640,
     title: "CAR WASH PRO", backgroundColor: "#0b1220", autoHideMenuBar: true,
+    icon: path.join(__dirname, "icon.ico"),
     webPreferences: { contextIsolation: true, nodeIntegration: false, sandbox: false, preload: path.join(__dirname, "preload.cjs") },
   });
   mainWin = win;
