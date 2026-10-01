@@ -16,8 +16,10 @@ let lastError = "";
 let lastSyncAt = "";
 
 export function getSyncConfig(): SyncConfig {
-  try { return { mode: "off", ...(JSON.parse(localStorage.getItem(CFG_KEY) || "{}") as SyncConfig) }; }
-  catch { return { mode: "off" }; }
+  try {
+    const raw = JSON.parse(localStorage.getItem(CFG_KEY) || "{}") as Partial<SyncConfig>;
+    return { mode: raw.mode ?? "off", url: raw.url };
+  } catch { return { mode: "off" }; }
 }
 export function setSyncConfig(cfg: SyncConfig): void {
   localStorage.setItem(CFG_KEY, JSON.stringify(cfg));

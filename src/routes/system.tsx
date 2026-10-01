@@ -9,7 +9,7 @@ import { getSyncConfig, setSyncConfig, syncStatus, testConnection, pushNow, type
 import { useDB, Field, Table, inputCls, btnPrimary, btnGhost, td } from "@/components/kit";
 
 interface NativeLan { lanStart(): Promise<{ ok: boolean; ips?: string[]; port?: number; error?: string }>; lanStop(): Promise<{ ok: boolean }>; lanStatus(): Promise<{ running: boolean; ips: string[]; port: number }>; }
-const native = (): (NativeLan & Record<string, unknown>) | null => (window as unknown as { cwpNative?: NativeLan }).cwpNative ?? null;
+const native = (): NativeLan | null => (window as unknown as { cwpNative?: NativeLan }).cwpNative ?? null;
 
 export const Route = createFileRoute("/system")({
   beforeLoad: () => requireAuth(),
