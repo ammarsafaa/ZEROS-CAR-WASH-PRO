@@ -41,7 +41,8 @@ function CustomersPage() {
       .reduce((s, i) => s + i.total, 0);
   const lastVisit = (id: string) => {
     const os = db.orders.filter((o) => o.customerId === id).map((o) => o.createdAt).sort();
-    return os.length ? new Date(os[os.length - 1]).toLocaleDateString("ar-IQ") : "—";
+    const last = os[os.length - 1];
+    return last ? new Date(last).toLocaleDateString("ar-IQ") : "—";
   };
 
   const openAdd = () => {

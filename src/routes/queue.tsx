@@ -75,7 +75,7 @@ function QueuePage() {
   };
 
   const nextLabel = (s: OrderStatus) =>
-    ({ WAITING: "بدء الغسيل", IN_WASH: "فحص الجودة", QUALITY: "جاهزة", READY: "تسليم" })[s] ?? "";
+    ({ WAITING: "بدء الغسيل", IN_WASH: "فحص الجودة", QUALITY: "جاهزة", READY: "تسليم" } as Partial<Record<OrderStatus, string>>)[s] ?? "";
 
   return (
     <AppLayout title="طابور السيارات">
