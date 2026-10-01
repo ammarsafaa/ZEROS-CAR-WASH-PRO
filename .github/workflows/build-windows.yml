@@ -1,0 +1,64 @@
+name: Build Windows Installer (CAR WASH PRO)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build desktop app (offline SPA)
+        run: bunx vite build -c vite.desktop.config.ts
+
+      - name: Stage Electron app
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force stage/app/electron | Out-Null
+          New-Item -ItemType Directory -Force stage/app/dist | Out-Null
+          Copy-Item electron/main.cjs stage/app/electron/
+          Copy-Item -Recurse dist/client stage/app/dist/client
+          '{"name":"carwashpro","productName":"CAR WASH PRO","version":"1.0.0","main":"electron/main.cjs"}' | Set-Content -Encoding utf8NoBOM stage/app/package.json
+
+      - name: Package Windows executable
+        run: npx --yes @electron/packager@18 stage/app "CAR WASH PRO" --platform=win32 --arch=x64 --electron-version=33.2.1 --out=installer --overwrite
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+
+      - name: Build Setup.exe
+        shell: pwsh
+        run: |
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          $langDir = "C:\Program Files (x86)\Inno Setup 6\Languages"
+          if (-not (Test-Path "$langDir\Arabic.isl")) {
+            (Get-Content installer/CarWashPro.iss) | Where-Object { $_ -notmatch 'Arabic.isl' } | Set-Content -Encoding utf8 installer/CarWashPro.iss
+          }
+          & $iscc installer/CarWashPro.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: CarWashPro-Setup
+          path: installer/Output/*.exe
+
+      - name: Upload portable version
+        uses: actions/upload-artifact@v4
+        with:
+          name: CarWashPro-Portable
+          path: installer/CAR WASH PRO-win32-x64
