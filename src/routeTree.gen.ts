@@ -12,12 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BookingsRouteImport } from './routes/bookings'
 import { Route as CheckinRouteImport } from './routes/checkin'
+import { Route as CouponsRouteImport } from './routes/coupons'
 import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as ExpensesRouteImport } from './routes/expenses'
 import { Route as InventoryRouteImport } from './routes/inventory'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LoyaltyRouteImport } from './routes/loyalty'
 import { Route as PackagesRouteImport } from './routes/packages'
 import { Route as PosRouteImport } from './routes/pos'
+import { Route as ProductsRouteImport } from './routes/products'
 import { Route as QueueRouteImport } from './routes/queue'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as SalesRouteImport } from './routes/sales'
@@ -42,6 +45,11 @@ const CheckinRoute = CheckinRouteImport.update({
   path: '/checkin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CouponsRoute = CouponsRouteImport.update({
+  id: '/coupons',
+  path: '/coupons',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CustomersRoute = CustomersRouteImport.update({
   id: '/customers',
   path: '/customers',
@@ -62,6 +70,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoyaltyRoute = LoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PackagesRoute = PackagesRouteImport.update({
   id: '/packages',
   path: '/packages',
@@ -70,6 +83,11 @@ const PackagesRoute = PackagesRouteImport.update({
 const PosRoute = PosRouteImport.update({
   id: '/pos',
   path: '/pos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsRoute = ProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
 const QueueRoute = QueueRouteImport.update({
@@ -117,12 +135,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
+  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/expenses': typeof ExpensesRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/loyalty': typeof LoyaltyRoute
   '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
   '/sales': typeof SalesRoute
@@ -136,12 +157,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
+  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/expenses': typeof ExpensesRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/loyalty': typeof LoyaltyRoute
   '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
   '/sales': typeof SalesRoute
@@ -156,12 +180,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/bookings': typeof BookingsRoute
   '/checkin': typeof CheckinRoute
+  '/coupons': typeof CouponsRoute
   '/customers': typeof CustomersRoute
   '/expenses': typeof ExpensesRoute
   '/inventory': typeof InventoryRoute
   '/login': typeof LoginRoute
+  '/loyalty': typeof LoyaltyRoute
   '/packages': typeof PackagesRoute
   '/pos': typeof PosRoute
+  '/products': typeof ProductsRoute
   '/queue': typeof QueueRoute
   '/reports': typeof ReportsRoute
   '/sales': typeof SalesRoute
@@ -177,12 +204,15 @@ export interface FileRouteTypes {
     | '/'
     | '/bookings'
     | '/checkin'
+    | '/coupons'
     | '/customers'
     | '/expenses'
     | '/inventory'
     | '/login'
+    | '/loyalty'
     | '/packages'
     | '/pos'
+    | '/products'
     | '/queue'
     | '/reports'
     | '/sales'
@@ -196,12 +226,15 @@ export interface FileRouteTypes {
     | '/'
     | '/bookings'
     | '/checkin'
+    | '/coupons'
     | '/customers'
     | '/expenses'
     | '/inventory'
     | '/login'
+    | '/loyalty'
     | '/packages'
     | '/pos'
+    | '/products'
     | '/queue'
     | '/reports'
     | '/sales'
@@ -215,12 +248,15 @@ export interface FileRouteTypes {
     | '/'
     | '/bookings'
     | '/checkin'
+    | '/coupons'
     | '/customers'
     | '/expenses'
     | '/inventory'
     | '/login'
+    | '/loyalty'
     | '/packages'
     | '/pos'
+    | '/products'
     | '/queue'
     | '/reports'
     | '/sales'
@@ -235,12 +271,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BookingsRoute: typeof BookingsRoute
   CheckinRoute: typeof CheckinRoute
+  CouponsRoute: typeof CouponsRoute
   CustomersRoute: typeof CustomersRoute
   ExpensesRoute: typeof ExpensesRoute
   InventoryRoute: typeof InventoryRoute
   LoginRoute: typeof LoginRoute
+  LoyaltyRoute: typeof LoyaltyRoute
   PackagesRoute: typeof PackagesRoute
   PosRoute: typeof PosRoute
+  ProductsRoute: typeof ProductsRoute
   QueueRoute: typeof QueueRoute
   ReportsRoute: typeof ReportsRoute
   SalesRoute: typeof SalesRoute
@@ -274,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CheckinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/coupons': {
+      id: '/coupons'
+      path: '/coupons'
+      fullPath: '/coupons'
+      preLoaderRoute: typeof CouponsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/customers': {
       id: '/customers'
       path: '/customers'
@@ -302,6 +348,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/loyalty': {
+      id: '/loyalty'
+      path: '/loyalty'
+      fullPath: '/loyalty'
+      preLoaderRoute: typeof LoyaltyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/packages': {
       id: '/packages'
       path: '/packages'
@@ -314,6 +367,13 @@ declare module '@tanstack/react-router' {
       path: '/pos'
       fullPath: '/pos'
       preLoaderRoute: typeof PosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/products': {
+      id: '/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/queue': {
@@ -379,12 +439,15 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BookingsRoute: BookingsRoute,
   CheckinRoute: CheckinRoute,
+  CouponsRoute: CouponsRoute,
   CustomersRoute: CustomersRoute,
   ExpensesRoute: ExpensesRoute,
   InventoryRoute: InventoryRoute,
   LoginRoute: LoginRoute,
+  LoyaltyRoute: LoyaltyRoute,
   PackagesRoute: PackagesRoute,
   PosRoute: PosRoute,
+  ProductsRoute: ProductsRoute,
   QueueRoute: QueueRoute,
   ReportsRoute: ReportsRoute,
   SalesRoute: SalesRoute,
