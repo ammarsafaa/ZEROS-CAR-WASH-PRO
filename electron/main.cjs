@@ -54,6 +54,29 @@ ipcMain.handle("update-download", async () => {
 });
 ipcMain.on("update-install", () => { if (updater) updater.quitAndInstall(false, true); });
 
+// ---- LAN server (main-device mode): shares the database with other devices ----
+const lan = require("./server.cjs");
+const LAN_CFG = path.join(app.getPath("userData"), "lan-config.json");
+const LAN_DB = path.join(app.getPath("userData"), "zeros-master-db.json");
+let lanServer = null;
+function lanCfg() { try { return JSON.parse(fs.readFileSync(LAN_CFG, "utf8")); } catch { return { enabled: false }; } }
+async function lanStart() {
+  if (lanServer) return { ok: true, ips: lan.localIPs(), port: lan.PORT };
+  try {
+    lanServer = await lan.startServer(ROOT, LAN_DB);
+    fs.writeFileSync(LAN_CFG, JSON.stringify({ enabled: true }));
+    return { ok: true, ips: lan.localIPs(), port: lan.PORT };
+  } catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+}
+function lanStop() {
+  if (lanServer) { try { lanServer.close(); } catch { /* ignore */ } lanServer = null; }
+  fs.writeFileSync(LAN_CFG, JSON.stringify({ enabled: false }));
+  return { ok: true };
+}
+ipcMain.handle("lan-start", () => lanStart());
+ipcMain.handle("lan-stop", () => lanStop());
+ipcMain.handle("lan-status", () => ({ running: !!lanServer, ips: lan.localIPs(), port: lan.PORT }));
+
 app.whenReady().then(() => {
   Menu.setApplicationMenu(null);
   protocol.handle("app", (req) => {
@@ -63,6 +86,7 @@ app.whenReady().then(() => {
     return net.fetch(pathToFileURL(file).toString());
   });
   createWindow();
+  if (lanCfg().enabled) void lanStart(); // re-open the LAN server if it was on
 });
 app.on("second-instance", () => { const w = BrowserWindow.getAllWindows()[0]; if (w) { if (w.isMinimized()) w.restore(); w.focus(); } });
 app.on("window-all-closed", () => app.quit());
