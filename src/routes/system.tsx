@@ -28,7 +28,8 @@ function SystemPage() {
   useEffect(() => { setMid(machineId()); setLic(getLicense()); setDays(trialDaysLeft()); setBackups(listBackups()); }, []);
 
   const activate = () => {
-    if (!activateLicense(key, owner)) return alert("مفتاح الترخيص غير صحيح لهذا الجهاز");
+    const err = activateLicense(key, owner);
+    if (err) return alert(err);
     setLic(getLicense()); logAudit(db, user, "LICENSE_ACTIVATED", owner); saveDB(db); alert("تم تفعيل البرنامج بنجاح");
   };
 
