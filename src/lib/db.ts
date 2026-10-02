@@ -1,3 +1,4 @@
+import { ed25519 } from "@noble/curves/ed25519.js";
 // Car Wash Pro — local offline data layer (localStorage-backed)
 // All data stays on the device. No network, no cloud.
 
