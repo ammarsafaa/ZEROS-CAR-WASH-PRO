@@ -42,6 +42,7 @@ function SystemPage() {
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" disabled={!isAdmin} checked={db.settings.autoBackup !== false} onChange={(e) => { db.settings.autoBackup = e.target.checked; saveDB(db); refresh(); }} /> تفعيل النسخ التلقائي</label>
           <div className="text-sm">آخر نسخة: <b>{db.settings.lastBackupAt ? new Date(db.settings.lastBackupAt).toLocaleString("ar-IQ") : "—"}</b></div>
           <button className={btnPrimary} onClick={() => { makeAutoBackup(db); setBackups(listBackups()); refresh(); }}>نسخة الآن</button>
+          <BackupFolder isAdmin={isAdmin} />
           <Table head={["التاريخ", "الحجم", ""]} empty={!backups.length}>
             {backups.map((b) => (
               <tr key={b.at}>
@@ -92,5 +93,19 @@ function SqlSection({ isAdmin }: { isAdmin: boolean }) {
       </div>
       {isAdmin && (edit ? <SqlSetupForm onDone={() => setEdit(false)} /> : <button className={btnGhost} onClick={() => setEdit(true)}>تغيير إعدادات الاتصال</button>)}
     </section>
+  );
+}
+
+function BackupFolder({ isAdmin }: { isAdmin: boolean }) {
+  const n = (window as unknown as { cwpNative?: { backupGetDir?: () => Promise<string>; backupPickDir?: () => Promise<string | null> } }).cwpNative;
+  const [dir, setDir] = useState("");
+  useEffect(() => { void n?.backupGetDir?.().then(setDir); }, [n]);
+  if (!n?.backupGetDir) return null;
+  return (
+    <div className="space-y-1 rounded-lg bg-muted p-3 text-sm">
+      <div>مجلد النسخ عند إغلاق البرنامج (آخر 30 نسخة):</div>
+      <div dir="ltr" className="font-mono text-xs">{dir}</div>
+      {isAdmin && <button className={btnGhost} onClick={() => void n.backupPickDir?.().then((d) => d && setDir(d))}>تغيير المجلد</button>}
+    </div>
   );
 }

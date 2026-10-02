@@ -17,6 +17,13 @@ contextBridge.exposeInMainWorld("cwpNative", {
   // Printing
   listPrinters: () => ipcRenderer.invoke("printers-list"),
   printSilent: (name) => ipcRenderer.invoke("print-silent", name),
+  // Close guard + file backups
+  onCloseRequest: (cb) => { const h = () => cb(); ipcRenderer.on("close-requested", h); return () => ipcRenderer.removeListener("close-requested", h); },
+  confirmQuit: () => ipcRenderer.send("quit-confirmed"),
+  cancelQuit: () => ipcRenderer.send("quit-cancelled"),
+  backupWriteFile: (json) => ipcRenderer.invoke("backup-write-file", json),
+  backupGetDir: () => ipcRenderer.invoke("backup-get-dir"),
+  backupPickDir: () => ipcRenderer.invoke("backup-pick-dir"),
   // SQL Server storage
   sqlGetConfig: () => ipcRenderer.invoke("sql-get-config"),
   sqlTest: (c) => ipcRenderer.invoke("sql-test", c),

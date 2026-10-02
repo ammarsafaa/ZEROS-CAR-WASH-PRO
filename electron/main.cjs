@@ -1,7 +1,7 @@
 // ZEROS CAR WASH PRO — Electron desktop shell. Serves the bundled app from disk over a
 // private app:// scheme (stable origin => local data persists). Fully offline;
 // internet is only used when the user checks for an update.
-const { app, BrowserWindow, protocol, net, Menu, shell, ipcMain } = require("electron");
+const { app, BrowserWindow, protocol, net, Menu, shell, ipcMain, dialog } = require("electron");
 const path = require("path");
 const fs = require("fs");
 const { pathToFileURL } = require("url");
@@ -16,6 +16,34 @@ protocol.registerSchemesAsPrivileged([{ scheme: "app", privileges: { standard: t
 if (!app.requestSingleInstanceLock()) app.quit();
 
 let mainWin = null;
+let quitAllowed = false;
+ipcMain.on("quit-confirmed", () => { quitAllowed = true; app.quit(); });
+ipcMain.on("quit-cancelled", () => {});
+// ---- File backups (folder chosen once; default Documents/ZEROS Backups; keep last 30) ----
+const BK_CFG = () => path.join(app.getPath("userData"), "backup-config.json");
+function backupDir() {
+  try { const d = JSON.parse(fs.readFileSync(BK_CFG(), "utf8")).dir; if (d) return d; } catch { /* default */ }
+  return path.join(app.getPath("documents"), "ZEROS Backups");
+}
+ipcMain.handle("backup-get-dir", () => backupDir());
+ipcMain.handle("backup-pick-dir", async () => {
+  const r = await dialog.showOpenDialog(mainWin, { properties: ["openDirectory", "createDirectory"] });
+  if (r.canceled || !r.filePaths[0]) return null;
+  fs.writeFileSync(BK_CFG(), JSON.stringify({ dir: r.filePaths[0] }));
+  return r.filePaths[0];
+});
+ipcMain.handle("backup-write-file", (_e, json) => {
+  try {
+    const dir = backupDir();
+    fs.mkdirSync(dir, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    const file = path.join(dir, `zeros-backup-${stamp}.json`);
+    fs.writeFileSync(file, json);
+    const old = fs.readdirSync(dir).filter((f) => /^zeros-backup-.*\.json$/.test(f)).sort().reverse().slice(30);
+    for (const f of old) { try { fs.unlinkSync(path.join(dir, f)); } catch { /* ignore */ } }
+    return { ok: true, file };
+  } catch (e) { return { ok: false, error: String((e && e.message) || e) }; }
+});
 function createWindow() {
   const win = new BrowserWindow({
     width: 1366, height: 820, minWidth: 1024, minHeight: 640,
@@ -26,6 +54,16 @@ function createWindow() {
   mainWin = win;
   win.maximize();
   win.loadURL("app://carwash/");
+  // Close guard: ask the UI to confirm + take a mandatory backup first.
+  let asking = false;
+  win.on("close", (ev) => {
+    if (quitAllowed) return;
+    ev.preventDefault();
+    if (asking) return;
+    asking = true;
+    win.webContents.send("close-requested");
+    setTimeout(() => { asking = false; }, 1500);
+  });
   win.webContents.setWindowOpenHandler(({ url }) => {
     if (url === "" || url === "about:blank") return { action: "allow" }; // print popups
     if (url.startsWith("http")) shell.openExternal(url);

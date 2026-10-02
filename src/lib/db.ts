@@ -307,7 +307,8 @@ const SESSION_KEY = "cwp_session";
 
 export function getSession(): Session | null {
   try {
-    const raw = localStorage.getItem(SESSION_KEY);
+    localStorage.removeItem(SESSION_KEY); // legacy persistent session
+    const raw = sessionStorage.getItem(SESSION_KEY);
     return raw ? (JSON.parse(raw) as Session) : null;
   } catch {
     return null;
@@ -326,7 +327,7 @@ export function login(username: string, password: string): Session | null {
     name: user.name,
     role: user.role,
   };
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
   logAudit(db, user.username, "LOGIN", "تسجيل دخول");
   saveDB(db);
   return session;
@@ -339,7 +340,7 @@ export function logout(): void {
     logAudit(db, s.username, "LOGOUT", "تسجيل خروج");
     saveDB(db);
   }
-  localStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(SESSION_KEY);
 }
 
 // ---- language ----
