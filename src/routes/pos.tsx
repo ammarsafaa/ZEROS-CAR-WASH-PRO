@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Printer, Ban } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { AppLayout } from "@/components/AppLayout";
 import { requireAuth } from "./index";
 import { getDB, saveDB, nextCode, newId, logAudit, getSession, fmt, type Invoice, type Order } from "@/lib/db";
@@ -191,14 +192,16 @@ function PosPage() {
 
 function Receipt({ inv, onClose }: { inv: Invoice; onClose: () => void }) {
   const db = getDB();
+  const mm = db.settings.paperWidth === 58 ? 52 : 72;
   const order = db.orders.find((o) => o.id === inv.orderId);
   const v = db.vehicles.find((x) => x.id === order?.vehicleId);
   const c = db.customers.find((x) => x.id === order?.customerId);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="rounded-2xl bg-card p-4 shadow-xl">
-        <div id="receipt-print" className="w-[300px] bg-background p-4 font-mono text-xs text-foreground">
+        <div id="receipt-print" className="thermal p-4 font-mono text-xs" style={{ width: `${mm}mm`, "--rw": `${mm}mm` } as React.CSSProperties}>
           <div className="text-center">
+            {db.settings.logoData && <img src={db.settings.logoData} alt="" className="mx-auto mb-1 h-12 object-contain" />}
             <div className="text-base font-bold">{db.settings.businessName}</div>
             {db.settings.phone && <div>{db.settings.phone}</div>}
             {db.settings.address && <div>{db.settings.address}</div>}
@@ -222,6 +225,10 @@ function Receipt({ inv, onClose }: { inv: Invoice; onClose: () => void }) {
           <div>الكاشير: {inv.cashier}</div>
           {inv.voided && <div className="mt-2 text-center font-bold">*** ملغاة ***</div>}
           <div className="my-2 border-t border-dashed border-foreground" />
+          <div className="flex flex-col items-center">
+            <QRCodeSVG value={`${inv.code}|${fmt(inv.total)} ${db.settings.currency}|${inv.createdAt.slice(0, 10)}`} size={mm === 52 ? 52 : 64} fgColor="#000000" bgColor="#ffffff" />
+            <div className="mt-0.5 text-[9px]" dir="ltr">{inv.code}</div>
+          </div>
           <div className="text-center">شكراً لزيارتكم</div>
         </div>
         <div className="mt-3 flex gap-2">

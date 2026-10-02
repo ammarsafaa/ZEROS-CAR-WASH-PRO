@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Search, Plus, Minus, Trash2, ScanBarcode, Printer, User, Droplets, Tag, Star } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { AppLayout } from "@/components/AppLayout";
 import { requireAuth } from "./index";
 import { newId, nextCode, logAudit, saveDB, fmt, getSession, PRODUCT_CATS, OIL_CATS, type Invoice, type InvoiceLine } from "@/lib/db";

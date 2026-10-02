@@ -24,7 +24,35 @@ function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [pw, setPw] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+  const logoRef = useRef<HTMLInputElement>(null);
+  const [printS, setPrintS] = useState(db.settings);
   const isAdmin = session?.role === "admin" || session?.role === "manager";
+
+  const savePrint = () => {
+    db.settings = printS;
+    logAudit(db, session?.username ?? "?", "PRINT_SETTINGS", `ورق ${printS.paperWidth ?? 80}mm — الشعار: ${printS.logoData ? "مفعّل" : "معطّل"}`);
+    saveDB(db);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  const loadLogo = (file: File) => {
+    const r = new FileReader();
+    r.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const max = 240;
+        const scale = Math.min(1, max / img.width);
+        const cv = document.createElement("canvas");
+        cv.width = Math.max(1, Math.round(img.width * scale));
+        cv.height = Math.max(1, Math.round(img.height * scale));
+        cv.getContext("2d")?.drawImage(img, 0, 0, cv.width, cv.height);
+        setPrintS((p) => ({ ...p, logoData: cv.toDataURL("image/png") }));
+      };
+      img.src = String(r.result);
+    };
+    r.readAsDataURL(file);
+  };
 
   const save = () => {
     db.settings = s;
@@ -112,6 +140,47 @@ function SettingsPage() {
                 </button>
               )}
               <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={(e) => e.target.files?.[0] && restore(e.target.files[0])} />
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-5">
+            <h2 className="mb-4 font-bold">إعدادات الطباعة</h2>
+            <div className="space-y-3">
+              <div>
+                <label className="mb-1 block text-sm">مقاس الورق الحراري</label>
+                <select
+                  className={input}
+                  value={String(printS.paperWidth ?? 80)}
+                  onChange={(e) => setPrintS({ ...printS, paperWidth: +e.target.value as 58 | 80 })}
+                >
+                  <option value="80">80mm — القياسي</option>
+                  <option value="58">58mm — الصغير</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-sm">شعار المغسلة على الفاتورة</label>
+                <div className="flex items-center gap-3">
+                  {printS.logoData ? (
+                    <>
+                      <img src={printS.logoData} alt="الشعار" className="thermal h-14 rounded-lg border border-border object-contain p-1" />
+                      <button onClick={() => setPrintS({ ...printS, logoData: undefined })} className="rounded-lg border border-destructive px-3 py-1.5 text-sm text-destructive hover:bg-destructive/10">
+                        إزالة
+                      </button>
+                    </>
+                  ) : (
+                    <button onClick={() => logoRef.current?.click()} className="rounded-lg border border-border px-4 py-2 text-sm font-bold hover:bg-muted">
+                      اختيار صورة الشعار
+                    </button>
+                  )}
+                  <input ref={logoRef} type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && loadLogo(e.target.files[0])} />
+                </div>
+                <p className="mt-1 text-xs text-muted-foreground">يظهر أعلى الفاتورة الحرارية، وتُصغّر الصورة تلقائياً.</p>
+              </div>
+              {isAdmin && (
+                <button onClick={savePrint} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-primary-foreground">
+                  <Save className="h-4 w-4" /> {saved ? "تم الحفظ ✓" : "حفظ إعدادات الطباعة"}
+                </button>
+              )}
             </div>
           </div>
 
