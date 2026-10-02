@@ -2,8 +2,8 @@ import { printReceipt } from "@/lib/print";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Printer, Ban } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
 import { AppLayout } from "@/components/AppLayout";
+import { ProfessionalReceipt } from "@/components/ProfessionalReceipt";
 import { requireAuth } from "./index";
 import { getDB, saveDB, nextCode, newId, logAudit, getSession, fmt, type Invoice, type Order } from "@/lib/db";
 
@@ -193,45 +193,10 @@ function PosPage() {
 
 function Receipt({ inv, onClose }: { inv: Invoice; onClose: () => void }) {
   const db = getDB();
-  const mm = db.settings.paperWidth === 58 ? 52 : 72;
-  const order = db.orders.find((o) => o.id === inv.orderId);
-  const v = db.vehicles.find((x) => x.id === order?.vehicleId);
-  const c = db.customers.find((x) => x.id === order?.customerId);
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div onClick={(e) => e.stopPropagation()} className="rounded-2xl bg-card p-4 shadow-xl">
-        <div id="receipt-print" className="thermal p-4 font-mono text-xs" style={{ width: `${mm}mm`, "--rw": `${mm}mm` } as React.CSSProperties}>
-          <div className="text-center">
-            {db.settings.logoData && <img src={db.settings.logoData} alt="" className="mx-auto mb-1 h-12 object-contain" />}
-            <div className="text-base font-bold">{db.settings.businessName}</div>
-            {db.settings.phone && <div>{db.settings.phone}</div>}
-            {db.settings.address && <div>{db.settings.address}</div>}
-          </div>
-          <div className="my-2 border-t border-dashed border-foreground" />
-          <div>فاتورة: <span dir="ltr">{inv.code}</span></div>
-          <div>طلب: <span dir="ltr">{order?.code}</span></div>
-          <div>{new Date(inv.createdAt).toLocaleString("ar-IQ")}</div>
-          <div>العميل: {c?.name}</div>
-          <div>السيارة: {v?.make} {v?.model} — {v?.plate}</div>
-          <div className="my-2 border-t border-dashed border-foreground" />
-          {order?.items.map((it, i) => (
-            <div key={i} className="flex justify-between"><span>{it.name}</span><span>{fmt(it.price)}</span></div>
-          ))}
-          <div className="my-2 border-t border-dashed border-foreground" />
-          <div className="flex justify-between"><span>المجموع</span><span>{fmt(inv.subtotal)}</span></div>
-          {inv.discount > 0 && <div className="flex justify-between"><span>الخصم</span><span>-{fmt(inv.discount)}</span></div>}
-          {inv.tax > 0 && <div className="flex justify-between"><span>الضريبة</span><span>{fmt(inv.tax)}</span></div>}
-          <div className="flex justify-between text-sm font-bold"><span>الإجمالي</span><span>{fmt(inv.total)} {db.settings.currency}</span></div>
-          <div>طريقة الدفع: {inv.method}</div>
-          <div>الكاشير: {inv.cashier}</div>
-          {inv.voided && <div className="mt-2 text-center font-bold">*** ملغاة ***</div>}
-          <div className="my-2 border-t border-dashed border-foreground" />
-          <div className="flex flex-col items-center">
-            <QRCodeSVG value={`${inv.code}|${fmt(inv.total)} ${db.settings.currency}|${inv.createdAt.slice(0, 10)}`} size={mm === 52 ? 52 : 64} fgColor="#000000" bgColor="#ffffff" />
-            <div className="mt-0.5 text-[9px]" dir="ltr">{inv.code}</div>
-          </div>
-          <div className="text-center">شكراً لزيارتكم</div>
-        </div>
+      <div onClick={(e) => e.stopPropagation()} className="max-h-[92vh] overflow-y-auto rounded-lg bg-card p-4 shadow-xl">
+        <ProfessionalReceipt db={db} invoice={inv} />
         <div className="mt-3 flex gap-2">
           <button onClick={() => printReceipt()} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2 text-sm font-bold text-primary-foreground">
             <Printer className="h-4 w-4" /> طباعة

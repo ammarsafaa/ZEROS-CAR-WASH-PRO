@@ -2,8 +2,8 @@ import { printReceipt } from "@/lib/print";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Search, Plus, Minus, Trash2, ScanBarcode, Printer, User, Droplets, Tag, Star } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
 import { AppLayout } from "@/components/AppLayout";
+import { ProfessionalReceipt } from "@/components/ProfessionalReceipt";
 import { requireAuth } from "./index";
 import { newId, nextCode, logAudit, saveDB, fmt, getSession, PRODUCT_CATS, OIL_CATS, type Invoice, type InvoiceLine } from "@/lib/db";
 import { useDB, inputCls, btnPrimary, btnGhost } from "@/components/kit";
@@ -19,7 +19,6 @@ const METHODS = [["Cash", "نقدي"], ["Card", "بطاقة"], ["Credit", "آج�
 function SalesPage() {
   const [db, refresh, user] = useDB();
   const session = getSession();
-  const mm = db.settings.paperWidth === 58 ? 52 : 72;
   const [cat, setCat] = useState<string>("الخدمات");
   const [q, setQ] = useState("");
   const [cart, setCart] = useState<InvoiceLine[]>([]);
@@ -218,28 +217,8 @@ function SalesPage() {
       </div>
 
       {last && (
-        <div id="receipt-print" className="thermal hidden p-4 font-mono text-xs print:block" style={{ width: `${mm}mm`, "--rw": `${mm}mm` } as React.CSSProperties}>
-          <div className="text-center">
-            {db.settings.logoData && <img src={db.settings.logoData} alt="" className="mx-auto mb-1 h-12 object-contain" />}
-            <div className="text-base font-bold">{db.settings.businessName}</div>{db.settings.phone && <div>{db.settings.phone}</div>}{db.settings.address && <div>{db.settings.address}</div>}</div>
-          <div className="my-1 border-t border-dashed" />
-          <div>فاتورة: {last.code}</div><div>{new Date(last.createdAt).toLocaleString("ar-IQ")}</div><div>الكاشير: {last.cashier}</div>
-          {last.customerId && <div>العميل: {db.customers.find((c) => c.id === last.customerId)?.name}</div>}
-          <div className="my-1 border-t border-dashed" />
-          {last.lines?.map((l, i) => <div key={i} className="flex justify-between"><span>{l.name} ×{l.qty}</span><span>{fmt(l.qty * l.price)}</span></div>)}
-          <div className="my-1 border-t border-dashed" />
-          <div className="flex justify-between"><span>المجموع</span><span>{fmt(last.subtotal)}</span></div>
-          {last.discount > 0 && <div className="flex justify-between"><span>الخصم</span><span>{fmt(last.discount)}</span></div>}
-          {last.tax > 0 && <div className="flex justify-between"><span>الضريبة</span><span>{fmt(last.tax)}</span></div>}
-          <div className="flex justify-between text-sm font-bold"><span>الإجمالي</span><span>{fmt(last.total)} {db.settings.currency}</span></div>
-          {last.paid && last.paid > last.total && <div className="flex justify-between"><span>المستلم / الباقي</span><span>{fmt(last.paid)} / {fmt(last.paid - last.total)}</span></div>}
-          {(() => { const oc = db.oilChanges.find((o) => o.invoiceCode === last.code); return oc ? <div className="mt-1 font-bold">تبديل الزيت القادم عند: {fmt(oc.nextKm)} كم</div> : null; })()}
-          <div className="my-1 border-t border-dashed" />
-          <div className="flex flex-col items-center">
-            <QRCodeSVG value={`${last.code}|${fmt(last.total)} ${db.settings.currency}|${last.createdAt.slice(0, 10)}`} size={mm === 52 ? 52 : 64} fgColor="#000000" bgColor="#ffffff" />
-            <div className="mt-0.5 text-[9px]" dir="ltr">{last.code}</div>
-          </div>
-          <div className="mt-2 text-center">شكراً لزيارتكم</div>
+        <div className="hidden print:block">
+          <ProfessionalReceipt db={db} invoice={last} />
         </div>
       )}
     </AppLayout>
