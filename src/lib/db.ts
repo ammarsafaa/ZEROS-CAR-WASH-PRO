@@ -1,3 +1,4 @@
+import { ed25519 } from "@noble/curves/ed25519.js";
 // Car Wash Pro — local offline data layer (localStorage-backed)
 // All data stays on the device. No network, no cloud.
 
@@ -432,13 +433,44 @@ export function expectedKey(mid: string): string {
   const h = hashPassword(LIC_SALT + mid).toUpperCase().padEnd(16, "0").slice(0, 16);
   return h.match(/.{4}/g)!.join("-");
 }
-export function getLicense(): { key: string; owner: string; at: string } | null {
-  try { const l = JSON.parse(localStorage.getItem(LIC_KEY) || "null"); return l && l.key === expectedKey(machineId()) ? l : null; } catch { return null; }
+// Central license center keys: ZEROS1.<payload>.<signature>, Ed25519, verified fully offline.
+const ZEROS_PUBKEY_X = "I8bxvA6KUttkVCRiHQ71unJDTACbePyJ1av7qwLzpj8";
+const ZEROS_PRODUCT = "ZEROS-CARWASH";
+function b64urlToBytes(s: string): Uint8Array {
+  if (!/^[A-Za-z0-9_-]+$/.test(s)) throw new Error("b64");
+  const b = atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4));
+  return Uint8Array.from(b, (c) => c.charCodeAt(0));
 }
-export function activateLicense(key: string, owner: string): boolean {
-  if (key.trim().toUpperCase() !== expectedKey(machineId())) return false;
-  localStorage.setItem(LIC_KEY, JSON.stringify({ key: key.trim().toUpperCase(), owner, at: new Date().toISOString() }));
-  return true;
+/** Returns null when valid, otherwise an Arabic reason. */
+export function verifyZerosKey(key: string, mid: string): string | null {
+  const bad = "المفتاح غير صالح";
+  try {
+    const parts = key.trim().split(".");
+    if (parts.length !== 3 || parts[0] !== "ZEROS1") return bad;
+    const payload = b64urlToBytes(parts[1]!);
+    const sig = b64urlToBytes(parts[2]!);
+    if (!ed25519.verify(sig, payload, b64urlToBytes(ZEROS_PUBKEY_X))) return bad;
+    const p = JSON.parse(new TextDecoder().decode(payload));
+    if (p.v !== 1 || p.lifetime !== true) return bad;
+    if (p.product !== ZEROS_PRODUCT) return "المفتاح لنظام آخر";
+    if (String(p.machine ?? "").toUpperCase() !== mid.toUpperCase()) return "المفتاح لجهاز آخر";
+    return null;
+  } catch { return bad; }
+}
+function keyValid(key: string, mid: string): boolean {
+  return key.startsWith("ZEROS1.") ? verifyZerosKey(key, mid) === null : key === expectedKey(mid);
+}
+export function getLicense(): { key: string; owner: string; at: string } | null {
+  try { const l = JSON.parse(localStorage.getItem(LIC_KEY) || "null"); return l && keyValid(l.key, machineId()) ? l : null; } catch { return null; }
+}
+/** Returns null on success, otherwise an Arabic error message. */
+export function activateLicense(rawKey: string, owner: string): string | null {
+  const t = rawKey.trim();
+  const key = t.startsWith("ZEROS1.") ? t : t.toUpperCase();
+  if (key.startsWith("ZEROS1.")) { const e = verifyZerosKey(key, machineId()); if (e) return e; }
+  else if (key !== expectedKey(machineId())) return "المفتاح غير صالح";
+  localStorage.setItem(LIC_KEY, JSON.stringify({ key, owner, at: new Date().toISOString() }));
+  return null;
 }
 const FIRST_KEY = "cwp_first_run";
 export function trialDaysLeft(): number {
