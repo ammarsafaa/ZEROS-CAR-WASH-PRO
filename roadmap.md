@@ -12,3 +12,5 @@
 - [x] Windows package (ZIP + Inno Setup script)
 - [x] Print settings (paper width 80/58 + logo) + QR on receipts
 - [x] Professional unified invoice design for POS and direct sales
+- [ ] Standalone central licensing dashboard (customers, devices, permanent licenses, remote status)
+- [ ] Connect desktop activation to central licensing while preserving offline operation
