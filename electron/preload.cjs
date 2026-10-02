@@ -14,6 +14,9 @@ contextBridge.exposeInMainWorld("cwpNative", {
   lanStart: () => ipcRenderer.invoke("lan-start"),
   lanStop: () => ipcRenderer.invoke("lan-stop"),
   lanStatus: () => ipcRenderer.invoke("lan-status"),
+  // Printing
+  listPrinters: () => ipcRenderer.invoke("printers-list"),
+  printSilent: (name) => ipcRenderer.invoke("print-silent", name),
   // SQL Server storage
   sqlGetConfig: () => ipcRenderer.invoke("sql-get-config"),
   sqlTest: (c) => ipcRenderer.invoke("sql-test", c),

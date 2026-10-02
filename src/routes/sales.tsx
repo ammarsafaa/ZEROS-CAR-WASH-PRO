@@ -1,3 +1,4 @@
+import { printReceipt } from "@/lib/print";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Search, Plus, Minus, Trash2, ScanBarcode, Printer, User, Droplets, Tag, Star } from "lucide-react";
@@ -101,7 +102,7 @@ function SalesPage() {
     setLast(inv);
     setCart([]); setDiscount(0); setCouponCode(""); setUsePoints(0); setReceived(0); setKm(0);
     refresh();
-    setTimeout(() => window.print(), 100);
+    setTimeout(() => printReceipt(), 100);
   };
 
   const cats = ["الخدمات", ...PRODUCT_CATS];
@@ -212,7 +213,7 @@ function SalesPage() {
             </div>
           )}
           <button disabled={!cart.length} onClick={checkout} className={btnPrimary + " justify-center py-3.5 text-base"}><Printer className="h-5 w-5" /> دفع وطباعة ({fmt(total)})</button>
-          {last && <button className={btnGhost + " justify-center"} onClick={() => window.print()}>إعادة طباعة {last.code}</button>}
+          {last && <button className={btnGhost + " justify-center"} onClick={() => printReceipt()}>إعادة طباعة {last.code}</button>}
         </div>
       </div>
 

@@ -44,6 +44,10 @@ if (updater) {
   updater.on("update-downloaded", (i) => sendUpd({ state: "ready", version: i.version }));
   updater.on("error", (e) => sendUpd({ state: "error", error: String((e && e.message) || e) }));
 }
+ipcMain.handle("printers-list", async (e) => { try { return await e.sender.getPrintersAsync(); } catch { return []; } });
+ipcMain.handle("print-silent", (e, deviceName) => new Promise((res) => {
+  e.sender.print({ silent: true, printBackground: true, deviceName }, (ok, reason) => res({ ok, error: ok ? undefined : reason }));
+}));
 ipcMain.on("app-version", (e) => { e.returnValue = app.getVersion(); });
 ipcMain.handle("update-check", async () => {
   if (!updater || !app.isPackaged) return { ok: false, error: "no-updater" };
