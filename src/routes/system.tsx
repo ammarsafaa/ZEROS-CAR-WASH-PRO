@@ -42,6 +42,7 @@ function SystemPage() {
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" disabled={!isAdmin} checked={db.settings.autoBackup !== false} onChange={(e) => { db.settings.autoBackup = e.target.checked; saveDB(db); refresh(); }} /> تفعيل النسخ التلقائي</label>
           <div className="text-sm">آخر نسخة: <b>{db.settings.lastBackupAt ? new Date(db.settings.lastBackupAt).toLocaleString("ar-IQ") : "—"}</b></div>
           <button className={btnPrimary} onClick={() => { makeAutoBackup(db); setBackups(listBackups()); refresh(); }}>نسخة الآن</button>
+          <BackupFolder isAdmin={isAdmin} />
           <Table head={["التاريخ", "الحجم", ""]} empty={!backups.length}>
             {backups.map((b) => (
               <tr key={b.at}>

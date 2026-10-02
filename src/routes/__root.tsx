@@ -1,4 +1,5 @@
 import { SqlGate } from "@/components/SqlGate";
+import { CloseGuard } from "@/components/CloseGuard";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -121,6 +122,7 @@ function RootComponent() {
       <SqlGate>
         <Outlet />
       </SqlGate>
+      <CloseGuard />
     </QueryClientProvider>
   );
 }
