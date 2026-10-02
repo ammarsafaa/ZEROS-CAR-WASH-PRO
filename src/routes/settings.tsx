@@ -163,7 +163,7 @@ function SettingsPage() {
                   {printS.logoData ? (
                     <>
                       <img src={printS.logoData} alt="الشعار" className="thermal h-14 rounded-lg border border-border object-contain p-1" />
-                      <button onClick={() => setPrintS({ ...printS, logoData: undefined })} className="rounded-lg border border-destructive px-3 py-1.5 text-sm text-destructive hover:bg-destructive/10">
+                      <button onClick={() => setPrintS((p) => { const { logoData: _rm, ...rest } = p; return rest; })} className="rounded-lg border border-destructive px-3 py-1.5 text-sm text-destructive hover:bg-destructive/10">
                         إزالة
                       </button>
                     </>
