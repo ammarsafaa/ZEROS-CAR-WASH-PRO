@@ -10,3 +10,4 @@
 - [x] Role permissions + users
 - [x] Extra prints (car ticket)
 - [x] Windows package (ZIP + Inno Setup script)
+- [x] Print settings (paper width 80/58 + logo) + QR on receipts
