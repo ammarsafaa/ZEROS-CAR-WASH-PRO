@@ -1,3 +1,4 @@
+import { printReceipt } from "@/lib/print";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Printer, Ban } from "lucide-react";
@@ -232,7 +233,7 @@ function Receipt({ inv, onClose }: { inv: Invoice; onClose: () => void }) {
           <div className="text-center">شكراً لزيارتكم</div>
         </div>
         <div className="mt-3 flex gap-2">
-          <button onClick={() => window.print()} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2 text-sm font-bold text-primary-foreground">
+          <button onClick={() => printReceipt()} className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary py-2 text-sm font-bold text-primary-foreground">
             <Printer className="h-4 w-4" /> طباعة
           </button>
           <button onClick={onClose} className="flex-1 rounded-lg border border-border py-2 text-sm">إغلاق</button>
