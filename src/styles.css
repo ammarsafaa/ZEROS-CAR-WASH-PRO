@@ -107,6 +107,10 @@
 }
 
 /* Thermal receipt (80mm) print styles */
+.thermal {
+  background: #ffffff;
+  color: #000000;
+}
 @media print {
   body * {
     visibility: hidden;
@@ -118,7 +122,13 @@
   #receipt-print {
     position: absolute;
     inset: 0;
-    width: 72mm;
+    width: var(--rw, 72mm);
     font-family: "Cairo", monospace;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  #receipt-print * {
+    background: transparent !important;
+    color: #000000 !important;
   }
 }

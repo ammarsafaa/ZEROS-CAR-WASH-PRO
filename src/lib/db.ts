@@ -111,6 +111,8 @@ export interface Settings {
   oilIntervalKm?: number;
   autoBackup?: boolean;
   lastBackupAt?: string;
+  paperWidth?: 58 | 80;
+  logoData?: string;
 }
 
 export interface AuditEntry {
