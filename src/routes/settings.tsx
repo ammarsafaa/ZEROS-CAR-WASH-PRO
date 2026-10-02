@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { nativePrint, getReceiptPrinter, setReceiptPrinter } from "@/lib/print";
 import { Download, Upload, Save } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { UpdatePanel } from "@/components/UpdatePanel";
@@ -27,6 +28,13 @@ function SettingsPage() {
   const logoRef = useRef<HTMLInputElement>(null);
   const [printS, setPrintS] = useState(db.settings);
   const isAdmin = session?.role === "admin" || session?.role === "manager";
+  const [printers, setPrinters] = useState<{ name: string; displayName?: string; isDefault?: boolean }[] | null>(null);
+  const [printer, setPrinter] = useState("");
+  useEffect(() => {
+    setPrinter(getReceiptPrinter());
+    const n = nativePrint();
+    if (n) n.listPrinters().then(setPrinters).catch(() => setPrinters([]));
+  }, []);
 
   const savePrint = () => {
     db.settings = printS;
@@ -146,6 +154,24 @@ function SettingsPage() {
           <div className="rounded-xl border border-border bg-card p-5">
             <h2 className="mb-4 font-bold">إعدادات الطباعة</h2>
             <div className="space-y-3">
+              <div>
+                <label className="mb-1 block text-sm">طابعة الفواتير (لهذا الجهاز)</label>
+                {printers === null ? (
+                  <p className="text-xs text-muted-foreground">اختيار الطابعة متاح في نسخة سطح المكتب فقط.</p>
+                ) : (
+                  <select
+                    className={input}
+                    value={printer}
+                    onChange={(e) => { setPrinter(e.target.value); setReceiptPrinter(e.target.value); }}
+                  >
+                    <option value="">إظهار نافذة الطباعة كل مرة</option>
+                    {printers.map((p) => (
+                      <option key={p.name} value={p.name}>{(p.displayName || p.name) + (p.isDefault ? " (الافتراضية)" : "")}</option>
+                    ))}
+                  </select>
+                )}
+                {printers !== null && <p className="mt-1 text-xs text-muted-foreground">عند اختيار طابعة تُطبع الفاتورة مباشرة بضغطة واحدة. يُحفظ الاختيار فوراً.</p>}
+              </div>
               <div>
                 <label className="mb-1 block text-sm">مقاس الورق الحراري</label>
                 <select
