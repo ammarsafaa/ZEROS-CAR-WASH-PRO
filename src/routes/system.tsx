@@ -95,3 +95,17 @@ function SqlSection({ isAdmin }: { isAdmin: boolean }) {
     </section>
   );
 }
+
+function BackupFolder({ isAdmin }: { isAdmin: boolean }) {
+  const n = (window as unknown as { cwpNative?: { backupGetDir?: () => Promise<string>; backupPickDir?: () => Promise<string | null> } }).cwpNative;
+  const [dir, setDir] = useState("");
+  useEffect(() => { void n?.backupGetDir?.().then(setDir); }, [n]);
+  if (!n?.backupGetDir) return null;
+  return (
+    <div className="space-y-1 rounded-lg bg-muted p-3 text-sm">
+      <div>مجلد النسخ عند إغلاق البرنامج (آخر 30 نسخة):</div>
+      <div dir="ltr" className="font-mono text-xs">{dir}</div>
+      {isAdmin && <button className={btnGhost} onClick={() => void n.backupPickDir?.().then((d) => d && setDir(d))}>تغيير المجلد</button>}
+    </div>
+  );
+}
