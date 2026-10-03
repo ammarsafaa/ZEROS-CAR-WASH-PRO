@@ -26,6 +26,22 @@ function toMssql(c, database) {
   if (c.instance) o.options.instanceName = c.instance;
   if (c.port) o.port = Number(c.port);
   if (c.auth === "windows") {
+    // No credentials given: use the current Windows user (trusted connection) via msnodesqlv8 when available.
+    if (!c.user) {
+      try {
+        require.resolve("mssql/msnodesqlv8");
+        const t = {
+          server: o.server,
+          database: o.database,
+          driver: "msnodesqlv8",
+          options: { trustedConnection: true, encrypt: false, trustServerCertificate: true, enableArithAbort: true },
+          pool: o.pool, connectionTimeout: o.connectionTimeout, requestTimeout: o.requestTimeout,
+        };
+        if (c.instance) t.options.instanceName = c.instance;
+        if (c.port) t.port = Number(c.port);
+        return t;
+      } catch { /* msnodesqlv8 not installed — fall through to NTLM */ }
+    }
     o.authentication = { type: "ntlm", options: { domain: c.domain || "", userName: c.user || "", password: c.password || "" } };
   } else { o.user = c.user; o.password = c.password; }
   return o;
