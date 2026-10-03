@@ -122,7 +122,11 @@ ipcMain.handle("lan-status", () => ({ running: !!lanServer, ips: lan.localIPs(),
 // ---- SQL Server storage (required) ----
 const store = require("./sqlstore.cjs");
 const SQL_CFG = path.join(app.getPath("userData"), "sql-config.json");
-const err = (e) => String((e && e.message) || e);
+const err = (e) => {
+  const m = String((e && e.message) || e);
+  if (m === "Windows-auth-needs-driver") return "اتصال Windows بدون كلمة سر يحتاج تعريفة msnodesqlv8 — أعد تنصيب البرنامج بأحدث نسخة، أو اختر اتصال SQL Server باسم مستخدم وكلمة سر.";
+  return m;
+};
 ipcMain.handle("sql-get-config", () => { const c = store.readCfg(SQL_CFG); if (c) delete c.password; return { config: c, connected: store.connected() }; });
 ipcMain.handle("sql-test", async (_e, c) => { try { return { ok: true, version: await store.test(c) }; } catch (e) { return { ok: false, error: err(e) }; } });
 ipcMain.handle("sql-connect", async (_e, c) => {
