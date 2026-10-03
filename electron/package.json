@@ -55,7 +55,8 @@
   },
   "dependencies": {
     "electron-updater": "6.3.9",
-    "mssql": "11.0.1"
+    "mssql": "11.0.1",
+    "msnodesqlv8": "^4.5.0"
   },
   "devDependencies": {
     "electron": "33.2.1",
