@@ -27,9 +27,10 @@ export function SqlGate({ children }: { children: ReactNode }) {
 }
 
 export function SqlSetupForm({ initialError = "", onDone }: { initialError?: string; onDone: () => void }) {
-  const [c, setC] = useState<SqlConfig>({ server: "localhost", instance: "SQLEXPRESS", port: "", database: "ZerosCarWash", auth: "sql", user: "sa", password: "" });
+  const [c, setC] = useState<SqlConfig>({ server: "localhost", instance: "SQLEXPRESS", port: "", database: "ZerosCarWash", auth: "windows", user: "", password: "" });
   const [msg, setMsg] = useState(initialError ? "تعذر الاتصال: " + initialError : "");
   const [busy, setBusy] = useState(false);
+  const [advanced, setAdvanced] = useState(false);
 
   useEffect(() => {
     void nativeSql()?.sqlGetConfig().then((r) => { if (r.config) setC((p) => ({ ...p, ...r.config, password: "" })); });
