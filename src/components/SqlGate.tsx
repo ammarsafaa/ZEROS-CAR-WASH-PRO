@@ -58,13 +58,28 @@ export function SqlSetupForm({ initialError = "", onDone }: { initialError?: str
       <p className="text-sm text-muted-foreground">جميع بيانات البرنامج تُحفظ في SQL Server. في الجهاز الرئيسي اكتب <b dir="ltr">localhost</b>، وفي الأجهزة الأخرى اكتب رقم IP الجهاز الرئيسي.</p>
       <div className="grid grid-cols-2 gap-3">
         <Field label="السيرفر (اسم أو IP)"><input dir="ltr" className={inputCls} value={c.server} onChange={set("server")} /></Field>
-        <Field label="اسم النسخة (Instance)"><input dir="ltr" className={inputCls} value={c.instance} onChange={set("instance")} placeholder="SQLEXPRESS" /></Field>
-        <Field label="المنفذ (اختياري)"><input dir="ltr" className={inputCls} value={c.port} onChange={set("port")} placeholder="1433" /></Field>
         <Field label="اسم قاعدة البيانات"><input dir="ltr" className={inputCls} value={c.database} onChange={set("database")} /></Field>
-        <Field label="اسم المستخدم"><input dir="ltr" className={inputCls} value={c.user} onChange={set("user")} /></Field>
-        <Field label="كلمة السر"><input dir="ltr" type="password" className={inputCls} value={c.password} onChange={set("password")} /></Field>
       </div>
-      <p className="text-xs text-muted-foreground">إذا كتبت اسم النسخة اترك المنفذ فارغاً. قاعدة البيانات تُنشأ تلقائياً إذا لم تكن موجودة.</p>
+      <Field label="نوع الاتصال">
+        <select className={inputCls} value={c.auth} onChange={(e) => setC({ ...c, auth: e.target.value as SqlConfig["auth"] })}>
+          <option value="windows">Windows — بدون اسم مستخدم وكلمة سر (الجهاز الرئيسي)</option>
+          <option value="sql">SQL Server — باسم مستخدم وكلمة سر (للأجهزة الأخرى بالشبكة)</option>
+        </select>
+      </Field>
+      {c.auth === "sql" && (
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="اسم المستخدم"><input dir="ltr" className={inputCls} value={c.user} onChange={set("user")} placeholder="sa" /></Field>
+          <Field label="كلمة السر"><input dir="ltr" type="password" className={inputCls} value={c.password} onChange={set("password")} /></Field>
+        </div>
+      )}
+      <button type="button" className="text-xs text-primary underline" onClick={() => setAdvanced(!advanced)}>{advanced ? "إخفاء الخيارات المتقدمة" : "خيارات متقدمة (النسخة والمنفذ)"}</button>
+      {advanced && (
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="اسم النسخة (Instance)"><input dir="ltr" className={inputCls} value={c.instance} onChange={set("instance")} placeholder="SQLEXPRESS" /></Field>
+          <Field label="المنفذ (اختياري)"><input dir="ltr" className={inputCls} value={c.port} onChange={set("port")} placeholder="1433" /></Field>
+        </div>
+      )}
+      <p className="text-xs text-muted-foreground">الجهاز الرئيسي: اترك السيرفر <b dir="ltr">localhost</b> واختر اتصال Windows. الأجهزة الأخرى: اكتب رقم IP الجهاز الرئيسي واختر اتصال SQL Server. قاعدة البيانات تُنشأ تلقائياً إذا لم تكن موجودة.</p>
       {msg && <div className="rounded-lg bg-muted p-3 text-sm" dir="auto">{msg}</div>}
       <div className="flex gap-2">
         <button className={btnPrimary} disabled={busy} onClick={save}>حفظ واتصال</button>
