@@ -40,7 +40,7 @@ function toMssql(c, database) {
         if (c.instance) t.options.instanceName = c.instance;
         if (c.port) t.port = Number(c.port);
         return t;
-      } catch { /* msnodesqlv8 not installed — fall through to NTLM */ }
+      } catch { throw new Error("Windows-auth-needs-driver"); }
     }
     o.authentication = { type: "ntlm", options: { domain: c.domain || "", userName: c.user || "", password: c.password || "" } };
   } else { o.user = c.user; o.password = c.password; }
